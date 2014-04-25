@@ -90,6 +90,7 @@ $(function(){
 			}
 		});
 	});
+	
 	//deletegroup
 	$( "#delete-groups" ).click(function() {
 		alert("Button Clicked");

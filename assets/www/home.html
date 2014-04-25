@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport"
+	content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, target-densitydpi=medium-dpi" />
+
+<link rel="stylesheet" href="js/jQM-flat/jquery.mobile.flatui.css">
+<link rel="stylesheet" type="text/css" href="css/index.css" />
+<!-- <script type="text/javascript" src="js/fastclick.min.js"></script> -->
+<script type="text/javascript" src="cordova.js"></script>
+
+<script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>
+<script type="text/javascript"
+	src="js/jQueryMobile/jquery.mobile-1.3.2.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="telephonenumber.js"></script>
+
+<title>VotesApp</title>
+</head>
+<body>
+	<div id="app">
+		<div id="home-page" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>VotesApp</h1>
+			</div>
+
+			<div data-role="content">
+				<div id="logoContainer" class="centerText">
+					<img src="img/logo.png" id="logo" />
+				</div>
+				<a data-theme="d" href="#createpoll" data-role="button"
+					data-icon="flat-new" data-iconpos="right">Create Poll</a> <a
+					data-theme="f" href="#quick-vote" data-role="button"
+					data-icon="plus" data-iconpos="right">Quick Vote</a> <a
+					data-theme="g" href="#trending" data-role="button"
+					data-icon="flat-eye" data-iconpos="right">Trending</a> <a
+					data-theme="e" href="#categories" data-role="button"
+					data-icon="flat-cmd" data-iconpos="right">Categories</a> <a
+					data-theme="a" href="#mystats" data-role="button"
+					data-icon="flat-menu" data-iconpos="right">My Stats</a>
+
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="groups" href="#groupspage" data-icon="flat-menu"
+							data-theme="d">Groups</a></li>
+						<li><a id="friends" href="#friendspage" data-icon="flat-man"
+							data-theme="f">Friends</a></li>
+						<li><a id="settings" href="#settingspage"
+							data-icon="flat-settings" data-theme="e">Settings</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+
+		<!-- create poll  -->
+		<div id="createpoll" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>Create Poll</h1>
+				<a href="#home-page" data-role="button" data-icon="arrow-l"
+					data-inline="true">Back</a>
+			</div>
+			<div data-role="content">
+				<div data-role="fieldcontain">
+					<label for="name" style="font-weight: bold">Question:</label>
+					<textarea name="question" id="question">
+				</textarea>
+				</div>
+				<div>
+					<a id="addoption" data-role="button" data-icon="flat-plus"
+						data-iconpos="notext" data-theme="g" data-inline="true"
+						style="float: left;">Add</a> <a id="deleteoption"
+						data-role="button" data-icon="flat-cross" data-iconpos="notext"
+						data-theme="d" data-inline="true" style="float: right;">Delete</a>
+				</div>
+				<div>
+					<ul data-role="listview" data-inset="true" id="optionlistul">
+						<li id="listoption1" data-role="fieldcontain"><label
+							id="labeloption1" for="name" style="font-weight: bold">Option
+								1:</label> <input type="text" name="option1" id="option1" /></li>
+						<li id="listoption2" data-role="fieldcontain"><label
+							id="labeloption2" for="name" style="font-weight: bold">Option
+								2:</label> <input type="text" name="option2" id="option2" /></li>
+					</ul>
+					<label id="enddatelabel" for="name" style="font-weight: bold">Poll
+						End Date:</label><input type="date" id="enddate">
+
+				</div>
+				<div data-role="fieldcontain">
+					<label for="select-choice-1" class="select">Categories</label> <select
+						name="select-choice-1" id="categories">
+						<option value="fun">Fun</option>
+						<option value="rush">Entertainment</option>
+						<option value="express">Cars</option>
+						<option value="Timepass">TimePass</option>
+					</select>
+				</div>
+
+
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="submitpoll" href="#" data-icon="delete"
+							data-theme="d">Submit Poll</a></li>
+						<li><a id="edit-groups" href="#edit-groups" data-icon="gear"
+							data-theme="e">Clear</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- create new-groups  -->
+
+		<div id="create-group" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>Create Group</h1>
+
+				<a href="#home-page" data-role="button" data-icon="arrow-l"
+					data-inline="true">Back</a>
+			</div>
+			<div data-role="content">
+				<div id="contactinfo">
+
+					<div data-role="fieldcontain">
+						<label for="name" style="font-weight: bold">Group Name:</label> <input
+							type="text" name="groupname" id="groupname" />
+					</div>
+					<ul id="contactlist" data-role="listview" data-filter="true"
+						data-autodividers="true">
+					</ul>
+
+
+				</div>
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="creategroup" href="#home-page" data-icon="plus"
+							data-theme="d">Add to Group</a></li>
+						<li><a id="clearcontacts" href="#list-page"
+							data-icon="delete" data-icon="flat-menu" data-theme="f">Clear</a></li>
+						<li><a id="search-button" href="#search-page"
+							data-icon="search" data-theme="e">Search</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- my-groups  -->
+		<div id="my-groups" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>VotesApp</h1>
+				<a href="#home-page" data-role="button" data-icon="arrow-l"
+					data-inline="true">Back</a>
+			</div>
+			<div data-role="content">
+				<div id="logoContainer" class="centerText"></div>
+				<div id="menu">
+					<!-- <a data-theme="g" href="" data-role="button">Group 1</a> <a
+						data-theme="g" href="#due-page" data-role="button">Group 1</a> <a
+						data-theme="g" href="#second-page" data-role="button">Group 1</a>
+					<a data-theme="g" href="#due-page" data-role="button">Group 1</a> -->
+
+				</div>
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="create-poll" href="#second-page" data-icon="plus"
+							data-theme="d">Create Poll</a></li>
+						<li><a id="friends-button" href="#list-page"
+							data-icon="flat-menu" data-theme="f">Friends</a></li>
+						<li><a id="search-button" href="#search-page"
+							data-icon="search" data-theme="e">Search</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- edit-groups  -->
+		<div id="edit-groups" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>VotesApp</h1>
+				<h2 data-theme="g">Edit Group</h2>
+				<a href="#home-page" data-role="button" data-icon="arrow-l"
+					data-inline="true">Back</a>
+			</div>
+			<div data-role="content">
+				<div id="logoContainer" class="centerText">
+					<img src="img/logo.png" id="logo" />
+				</div>
+				<div id="menu"></div>
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="create-poll" href="#second-page" data-icon="plus"
+							data-theme="d">Create Poll</a></li>
+						<li><a id="friends-button" href="#list-page"
+							data-icon="flat-menu" data-theme="f">Friends</a></li>
+						<li><a id="search-button" href="#search-page"
+							data-icon="search" data-theme="e">Search</a></li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+	<script type="text/javascript" src="js/polls.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+
+</body>
+</html>
