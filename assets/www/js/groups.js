@@ -126,8 +126,8 @@ $(function(){
 				for(var i=0;i<obj.groups.length;i++) {
 					html += '<li id= "' + obj.groups[i]._id.$oid +'"><a class="groupListItem" id= "' + obj.groups[i]._id.$oid +'" href="#group-details">'+obj.groups[i].name+'</a></li>';
 				}
-				$( html ).appendTo( "#myGroupList" );
-				$("#myGroupList").listview("refresh");
+				$( html ).appendTo( "#optionlistul" );
+				$("#optionlistul").listview("refresh");
 				$( ".groupListItem" ).bind( "taphold", tapholdHandler );
 				$( ".groupListItem" ).bind( "tap", tapHandler );
 				//alert(msg);

@@ -1,17 +1,24 @@
+document.addEventListener("deviceready", onDeviceReady, false);
 
+function onDeviceReady()
+{
+	sessionStorage.phonenum=getMyPhoneNumber()
+	getContactList();
+	getMyGroups(sessionStorage.phonenum);
+
+}
+//constants
 var phonenum="";
 var poll_question_key="\"poll_question\":";
 var poll_options_key="\"poll_options\":";
 var poll_create_date_key="\"poll_create_date\":";
 var poll_end_date_key="\"poll_end_date\":";
 var poll_creator_key="\"poll_creator\":";
+var phonenum_key="\"phone_number\":";
 var poll_category_key="\"poll_category\":";
 var poll_groupid_key="\"poll_groupid\":";
 var poll_participants_key="\"poll_participants\":";
 var dq="\"";
-
-
-sessionStorage.phonenum=getMyPhoneNumber();
 
 function getMyPhoneNumber()
 {
@@ -27,13 +34,13 @@ function getMyPhoneNumber()
 //}
 $('#addoption').click(function()
 		{
-	var num=3;
+	var num=$('#optionlistul li').length +1;
 	var html="<li id='listoption"+num+"' data-role='fieldcontain'>" +
-	"<label id='labeloption"+num+"' for='name' style='font-weight: bold'>Option"+num+":</label> " +
-	"<input type='text' name='option' id='option"+num+"' /></li>";
+	"<label id='labeloption"+num+"' for='option' style='font-weight: bold'>Option"+num+":</label> " +
+	"<input type='text' name='option"+num+"' id='option"+num+"' /></li>";
 	alert(html);
 	$( html ).appendTo( "#optionlistul" );
-	$("#optionlistul").listview("refresh");
+	$("#optionlistul").listview("refresh",true);
 	/*<li id='listoption' data-role='fieldcontain'><label
 	id='labeloption' for='name' style='font-weight: bold'>Option
 		1:</label> <input type='text' name='option' id='option0' /></li>*/
@@ -47,11 +54,11 @@ function getPollDate()
 	var yyyy = today.getFullYear();
 
 	if(dd<10) {
-	    dd='0'+dd
+		dd='0'+dd
 	} 
 
 	if(mm<10) {
-	    mm='0'+mm
+		mm='0'+mm
 	} 
 
 	today = mm+'-'+dd+'-'+yyyy;
@@ -66,24 +73,78 @@ function getCreatePollJSON(){
 	for(i=1;i<=($('#optionlistul li').length);i++)
 	{
 		temp=temp+$('#option'+i).val();
-		
+
 		if(i !=($('#optionlistul li').length))
 			temp=temp+",";
 	}
-	createPollString=createPollString+temp+"],"+poll_create_date_key+dq+getPollDate()+dq+
-	","+poll_end_date_key+dq+getPollDate()+dq+","+poll_creator_key+dq+sessionStorage.phonenum+dq
-	+","+poll_category_key+dq+$( "#categories" ).val();+dq+","+poll_groupid_key+
-	"[test],"+poll_participants_key+"[12345678]}";
+	createPollString=createPollString+temp+"],"+poll_create_date_key+dq+getPollDate()+dq+","+poll_end_date_key+dq+($('#enddate').val())+dq+","+poll_creator_key+dq+sessionStorage.phonenum+dq+","+poll_category_key+dq+$( "#categories" ).val()+dq+",";
+	var selectedValues = new Array();
+	$.each($("input[name='checkedGroups']:checked"), function() {
+		selectedValues.push($(this).val());
+	});
 	temp="";
+	for(i=0;i<selectedValues.length;i++)
+	{
+		temp=temp+selectedValues[i];
+		if(i !=(selectedValues.length-1))
+			temp=temp+",";
+	}
+	createPollString=createPollString+poll_groupid_key+"["+temp+"],";
 
+	var selectedContacts = new Array();
+	selectedValues=[];
+	$.each($("input[name='checkedContactsPoll']:checked"), function() {
+		selectedValues.push($(this).val());
+	});
+	temp="";
+	for(i=0;i<selectedValues.length;i++)
+	{
+		temp=temp+selectedValues[i];
+		if(i !=(selectedValues.length-1))
+			temp=temp+",";
+	}
+	createPollString=createPollString+poll_participants_key+"["+temp+"]}";
+	temp="";
 	alert(createPollString);
-	//return createPollString;
+	return createPollString;
 
 }
-$('#submitpoll').click(function()
+
+function getContactList()
+{
+	function sortByContactName(a, b) { var x = a.name.formatted.toLowerCase(); var y = b.name.formatted.toLowerCase(); return ((x < y) ? -1 : ((x > y) ? 1 : 0)); }
+	function onSuccess(contacts) {
+		contacts.sort(sortByContactName);
+		var html="";
+		for (var i = 0; i < contacts.length ; i++) {
+			if(contacts[i].name != null && contacts[i].phoneNumbers != null) {
+				var name=contacts[i].name.formatted;
+				for(var j = 0; j< contacts[i].phoneNumbers.length;j++) {
+					var phone=contacts[i].phoneNumbers[j].value;		
+					html +="<li><label><input type='checkbox' name='checkedContactsPoll' class='checkcontacts' value='"+phone+"'>"+name+" &nbsp;" + phone + "</label></li>";
+				}
+			}
+		}
+		$( html ).appendTo( "#selectContactsList" );
+
+	};
+	function onError(contactError) {
+		alert('onError!');
+	};
+
+	var options      = new ContactFindOptions();
+	options.filter	 = "";
+	options.multiple = true;
+	var fields       =  ["displayName", "name", "phoneNumbers"];
+	navigator.contacts.find(fields, onSuccess, onError, options);
+}
+
+
+$('.submitPoll').click(function()
 		{
 	getCreatePollJSON();
-	/*var data=poll_question_key+'"'+$('#question')+'"'+poll_options_key+'';
+	var data=getCreatePollJSON();
+	alert("Data:"+data);
 	var url="http://10.0.2.2:8080/VotesApp/api/votesapp/poll";
 	$.ajax({
 		type: "POST",
@@ -97,13 +158,56 @@ $('#submitpoll').click(function()
 		},
 		error: function () {
 			alert("Error");
-		}*/
-	//});
-
+		}
+	});
 
 		});
 
+/*$('#selectgroups').click(function()
+		{
+	getMyGroups(sessionStorage.phonenum);
+		});*/
 
+function isEmpty(obj) {
+	for(var prop in obj) {
+		if(obj.hasOwnProperty(prop))
+			return false;
+	}
+
+	return true;
+}
+function getMyGroups(phonenum){
+	var data="phone_number={"+phonenum_key+phonenum+"}";
+	var url="http://10.0.2.2:8080/VotesApp/api/user/groups";
+	$.ajax({
+		type: "GET",
+		async:false,
+		url: url,
+		data:data,
+		success: function(msg){
+			var obj = jQuery.parseJSON( ''+ msg +'' );
+			var html= "";
+			if(!(isEmpty(obj)))
+			{
+				for(var i=0;i<obj.groups.length;i++) {
+					html += '<li><label><input type="checkbox" name="checkedGroups" class="checkgroups" value = "'+ obj.groups[i]._id.$oid +'">'+obj.groups[i].name+'</label></li>';
+				}
+			}
+			else
+				html += '<li>No Groups Exists!!</li>';
+			$( html ).appendTo( "#selectgroupslist" );
+			$("#selectgroupslist").listview("refresh");
+		},
+		error: function () {
+			alert("Error");
+		}
+	});
+}
+
+function showMyPolls(phonenum)
+{
+	
+}
 
 /*$(document).ready(function() {
 	$('#addoption').click(function() {
