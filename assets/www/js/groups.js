@@ -1,4 +1,5 @@
 //document.addEventListener("deviceready", onDeviceReady, false);
+var globalurl = "http://votesapp.elasticbeanstalk.com";
 $(function(){
 	var phonenum="";
 	var name_key="\"name\":";
@@ -6,15 +7,15 @@ $(function(){
 	var member_key="\"members\":";
 	var creategroup_key="group=";
 	var member_name="";
-//	function onDeviceReady()
-//	{
+	
 	//alert("In OnDeviceReady");
 	sessionStorage.phonenum=getMyPhoneNumber();
 	//alert(sessionStorage.phonenum);
 	getMyGroups(sessionStorage.phonenum);
 	//alert("In OnDeviceReady"+phonenum);
 	getContactList();
-//	}
+
+	
 
 	function getContactList()
 	{
@@ -74,7 +75,8 @@ $(function(){
 	$( "#creategroup" ).click(function() {
 		alert("Button Clicked");
 		var data=getCreateGroupJSON();
-		var url="http://10.0.2.2:8080/VotesApp/api/user/group";
+		var url = globalurl +"/api/user/group";		
+		//var url="http://10.0.2.2:8080/VotesApp/api/user/group";
 		$.ajax({
 			type: "POST",
 			//contentType: "application/json",
@@ -95,8 +97,9 @@ $(function(){
 	$( "#delete-groups" ).click(function() {
 		alert("Button Clicked");
 		var data="id="+$("#groupid").val();
-		alert("Data:"+data);
-		var url="http://10.0.2.2:8080/VotesApp/api/user/group";
+		//alert("Data:"+data);
+		var url = globalurl +"/api/user/group";	
+		//var url="http://10.0.2.2:8080/VotesApp/api/user/group";
 		$.ajax({
 			type: "DELETE",
 			//contentType: "application/json",
@@ -112,10 +115,21 @@ $(function(){
 			}
 		});
 	});
+	
+	function isEmpty(obj) {
+		for(var prop in obj) {
+			if(obj.hasOwnProperty(prop))
+				return false;
+		}
+
+		return true;
+	}
 
 	function getMyGroups(phonenum){
+		//alert("get my groups:groups" + phonenum);
 		var data="phone_number={"+phonenum_key+phonenum+"}";
-		var url="http://10.0.2.2:8080/VotesApp/api/user/groups";
+		var url = globalurl +"/api/user/groups";	
+		//var url="http://10.0.2.2:8080/VotesApp/api/user/groups";
 		$.ajax({
 			type: "GET",
 			url: url,
@@ -123,14 +137,23 @@ $(function(){
 			success: function(msg){
 				var obj = jQuery.parseJSON( ''+ msg +'' );
 				var html= "";
-				for(var i=0;i<obj.groups.length;i++) {
-					html += '<li id= "' + obj.groups[i]._id.$oid +'"><a class="groupListItem" id= "' + obj.groups[i]._id.$oid +'" href="#group-details">'+obj.groups[i].name+'</a></li>';
+				if(!(isEmpty(obj)))
+				{
+					for(var i=0;i<obj.groups.length;i++) {
+						html += '<li class="groupListItem" id= "' + obj.groups[i]._id.$oid +'">'+obj.groups[i].name+'</li>';
+					}
+					
 				}
-				$( html ).appendTo( "#optionlistul" );
-				$("#optionlistul").listview("refresh");
-				$( ".groupListItem" ).bind( "taphold", tapholdHandler );
-				$( ".groupListItem" ).bind( "tap", tapHandler );
-				//alert(msg);
+				else
+				{
+					html += '<li>No Groups Found</li>'; 
+				}
+				//alert(html);
+				$( html ).appendTo( "#myGroupList" );
+				//$("#myGroupList").html(html);
+				$("#myGroupList").listview("refresh");
+				//$( ".groupListItem" ).bind( "taphold", tapholdHandler );
+				$( ".groupListItem" ).bind( "tap", getMyGroupDetails );
 			},
 			error: function () {
 				alert("Error");
@@ -178,14 +201,13 @@ $(function(){
 
 		//$( event.target ).addClass( "taphold" );
 	}
-	//clear contacts
-	$("#clearcontacts").click(function() {
-		$('.checkcontacts').filter(':checkbox').prop('checked',false).checkboxradio("refresh");
-	});
+	
 	//group info
-	function tapHandler( event ){
+	function getMyGroupDetails(event){
+		//alert("in get my group details");
 		var data="id="+event.target.getAttribute("id");
-		var url="http://10.0.2.2:8080/VotesApp/api/user/group";
+		var url = globalurl +"/api/user/group";	
+		//var url="http://10.0.2.2:8080/VotesApp/api/user/group";
 		var temp_mem_name="";
 		$.ajax({
 			async:false,
@@ -208,9 +230,11 @@ $(function(){
 					}
 				}		
 				//alert(html);
-				$( "#groupmembers" ).html( html );
-
-				$("#groupmembers").listview("refresh");
+				//$("#groupmembers").empty();
+				$("#groupmembers").html(html);
+				//$(html ).appendTo( "#groupmembers" );
+				//$("#groupmembers").listview("refresh");
+				location.href="#group-details";
 				//$( ".groupListItem" ).bind( "taphold", tapholdHandler );
 				//alert(msg);
 			},
@@ -221,6 +245,12 @@ $(function(){
 
 	}
 
+	
+	//clear contacts
+	$("#clearcontacts").click(function() {
+		$('.checkcontacts').filter(':checkbox').prop('checked',false).checkboxradio("refresh");
+	});
+	
 
 });
 

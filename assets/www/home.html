@@ -41,8 +41,10 @@
 				</div>
 				<a data-theme="d" href="#createpoll" data-role="button"
 					data-icon="flat-new" data-iconpos="right">Create Poll</a> <a
-					data-theme="f" href="#quick-vote" data-role="button"
-					data-icon="plus" data-iconpos="right">Quick Vote</a> <a
+					data-theme="f" href="#showAllPollsPage" data-role="button"
+					data-icon="plus" data-iconpos="right">Quick Vote</a><a
+					data-theme="a" href="#showPollsPage" data-role="button"
+					data-icon="flat-eye" data-iconpos="right">My Polls</a> <a
 					data-theme="g" href="#trending" data-role="button"
 					data-icon="flat-eye" data-iconpos="right">Trending</a> <a
 					data-theme="e" href="#categories" data-role="button"
@@ -55,8 +57,8 @@
 				data-position="fixed" data-tap-toggle="false">
 				<div id="navbar" data-role="navbar">
 					<ul>
-						<li><a id="groups" href="#groupspage" data-icon="flat-menu"
-							data-theme="d">Groups</a></li>
+						<li><a id="groupsBtn" href="#" data-icon="flat-menu"
+							data-theme="d" onclick="redirectToGroup()">Groups</a></li>
 						<li><a id="friends" href="#friendspage" data-icon="flat-man"
 							data-theme="f">Friends</a></li>
 						<li><a id="settings" href="#settingspage"
@@ -78,7 +80,7 @@
 			</div>
 			<div data-role="content">
 				<div data-role="fieldcontain">
-					<label for="name" style="font-weight: bold">Question:</label>
+					<label for="question" style="font-weight: bold">Question:</label>
 					<textarea name="question" id="question">
 				</textarea>
 				</div>
@@ -113,10 +115,11 @@
 					</select>
 				</div>
 				<div>
-					<a id="selectGroupBtn" data-theme="d" href="#selectgroups" data-role="button"
-						data-icon="flat-new" data-iconpos="right" data-inline="true">Groups</a>
-					<a data-theme="f" href="#selectContactsPage" data-role="button"
-						data-icon="plus" data-iconpos="right" data-inline="true">Friends</a>
+					<a id="selectGroupBtn" data-theme="d" href="#selectgroups"
+						data-role="button" data-icon="flat-new" data-iconpos="right"
+						data-inline="true">Groups</a> <a data-theme="f"
+						href="#selectContactsPage" data-role="button" data-icon="plus"
+						data-iconpos="right" data-inline="true">Friends</a>
 				</div>
 
 			</div>
@@ -124,15 +127,15 @@
 				data-position="fixed" data-tap-toggle="false">
 				<div id="navbar" data-role="navbar">
 					<ul>
-						<li><a id="submitpoll" href="#" data-icon="delete"
-							data-theme="d">Submit Poll</a></li>
+						<li><a id="submitToPublic" class="submitPoll" href="#"
+							data-icon="delete" data-theme="d">Submit to Public</a></li>
 						<li><a id="clearcreatepoll" href="#" data-icon="delete"
 							data-theme="e">Clear</a></li>
 					</ul>
 				</div>
 			</div>
 		</div>
-		
+
 		<!-- select  groups to publish poll  -->
 
 		<div id="selectgroups" data-role="page">
@@ -145,16 +148,16 @@
 					data-inline="true">Back</a>
 			</div>
 			<div data-role="content">
-				<ul id="selectgroupslist" data-role="listview" data-filter="true" data-filter-reveal="true" data-theme="g">
-
+				<ul id="selectgroupslist" data-role="listview" data-filter="true"
+					data-theme="g">
 				</ul>
 			</div>
 			<div id="footer" data-role="footer" data-id="footer1"
 				data-position="fixed" data-tap-toggle="false">
 				<div id="navbar" data-role="navbar">
 					<ul>
-						<li><a class="submitPoll" href="#" data-icon="plus"
-							data-theme="d">Submit Poll</a></li>
+						<li><a class="submitPoll" id="submitPollsToGroups" href="#"
+							data-icon="plus" data-theme="d">Submit Poll</a></li>
 						<li><a id="clear" href="#" data-icon="delete" data-theme="e">Clear</a></li>
 					</ul>
 				</div>
@@ -185,10 +188,10 @@
 				data-position="fixed" data-tap-toggle="false">
 				<div id="navbar" data-role="navbar">
 					<ul>
-						<li><a class="submitPoll" href="#" data-icon="plus"
-							data-theme="d">Submit Poll</a></li>
-						<li><a id="clearcontacts" href="#list-page" data-icon="delete"
-							data-icon="flat-menu" data-theme="f">Clear</a></li>
+						<li><a class="submitPoll" id="submitPollsToFriends" href="#"
+							data-icon="plus" data-theme="d">Submit Poll</a></li>
+						<li><a id="clearcontacts" href="#list-page"
+							data-icon="delete" data-icon="flat-menu" data-theme="f">Clear</a></li>
 						<li><a id="search-button" href="#search-page"
 							data-icon="search" data-theme="e">Search</a></li>
 					</ul>
@@ -196,21 +199,22 @@
 			</div>
 		</div>
 
-		<!-- edit-groups  -->
-		<div id="edit-groups" data-role="page">
+		<!-- showMyAssignedPolls  -->
+		<div id="showPollsPage" data-role="page">
 			<div data-role="header" data-id="header" id="header"
 				data-position="fixed" data-theme="f" data-tap-toggle="false"
 				class="ui-header">
-				<h1>VotesApp</h1>
-				<h2 data-theme="g">Edit Group</h2>
+				<h1>My Polls</h1>
 				<a href="#home-page" data-role="button" data-icon="arrow-l"
 					data-inline="true">Back</a>
 			</div>
 			<div data-role="content">
-				<div id="logoContainer" class="centerText">
-					<img src="img/logo.png" id="logo" />
+				<div id="menu">
+					<ul id="myAssignedList" data-role="listview" data-filter="true">
+
+					</ul>
+
 				</div>
-				<div id="menu"></div>
 			</div>
 			<div id="footer" data-role="footer" data-id="footer1"
 				data-position="fixed" data-tap-toggle="false">
@@ -227,11 +231,111 @@
 			</div>
 
 		</div>
+
+		<!-- showPollDetails  -->
+		<div id="showPollDetails" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>Poll</h1>
+				<a href="#home-page" data-role="button" data-icon="arrow-l"
+					data-inline="true">Back</a>
+			</div>
+			<div data-role="content">
+				<div id="menu">
+					<p id="questionP"></p>
+
+
+				</div>
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="vote" href="#second-page" data-icon="plus"
+							data-theme="d">Vote</a></li>
+						<li><a id="friends-button" href="#list-page"
+							data-icon="flat-menu" data-theme="f">Clear</a></li>
+						<li><a id="search-button" href="#search-page"
+							data-icon="search" data-theme="e">My Polls</a></li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- showAllPolls  -->
+		<div id="showAllPollsPage" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>All Polls</h1>
+				<a href="#home-page" data-role="button" data-icon="arrow-l"
+					data-inline="true">Back</a>
+			</div>
+			<div data-role="content">
+				<div id="menu">
+					<ul id="myAllPollsList" data-role="listview" data-filter="true">
+
+					</ul>
+
+				</div>
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="create-poll" href="#second-page" data-icon="plus"
+							data-theme="d">Create Poll</a></li>
+						<li><a id="friends-button" href="#list-page"
+							data-icon="flat-menu" data-theme="f">Friends</a></li>
+						<li><a id="search-button" href="#search-page"
+							data-icon="search" data-theme="e">Search</a></li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+		
+			<!-- showPublicPollDetails  -->
+		<div id="showPublicPollDetailsPage" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>Poll</h1>
+				<a href="#home-page" data-role="button" data-icon="arrow-l"
+					data-inline="true">Back</a>
+			</div>
+			<div data-role="content">
+				<div id="menu">
+					<p id="questionPublic"></p>
+					<input type="hidden" id="publicPollHidden" name="groupdetails" value="" />
+
+
+				</div>
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="votePublic" href="#" data-icon="plus"
+							data-theme="d">Vote</a></li>
+						<li><a id="friends-button" href="#list-page"
+							data-icon="flat-menu" data-theme="f">Clear</a></li>
+						<li><a id="search-button" href="#search-page"
+							data-icon="search" data-theme="e">My Polls</a></li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+		
 	</div>
 
 
+
+
 	<script type="text/javascript" src="js/polls.js"></script>
-	<script type="text/javascript" src="js/index.js"></script>
 
 </body>
 </html>

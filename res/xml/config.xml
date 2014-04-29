@@ -33,7 +33,7 @@
     <access origin="*"/>
 
     <!-- <content src="http://mysite.com/myapp.html" /> for external pages -->
-    <content src="home.html" />
+    <content src="index.html" />
 
     <preference name="loglevel" value="DEBUG" />
     <!--
