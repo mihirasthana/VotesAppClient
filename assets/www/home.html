@@ -40,9 +40,9 @@
 					<img src="img/logo.png" id="logo" />
 				</div>
 				<a data-theme="d" href="#createpoll" data-role="button"
-					data-icon="flat-new" data-iconpos="right">Create Poll</a> <a
+					data-icon="flat-new" data-iconpos="right">Create Poll</a> <a id="publicPollsBtn"
 					data-theme="f" href="#showAllPollsPage" data-role="button"
-					data-icon="plus" data-iconpos="right">Quick Vote</a><a
+					data-icon="plus" data-iconpos="right">Quick Vote</a><a id="assignedPollsBtn" 
 					data-theme="a" href="#showPollsPage" data-role="button"
 					data-icon="flat-eye" data-iconpos="right">My Polls</a> <a
 					data-theme="g" href="#trending" data-role="button"
@@ -81,8 +81,7 @@
 			<div data-role="content">
 				<div data-role="fieldcontain">
 					<label for="question" style="font-weight: bold">Question:</label>
-					<textarea name="question" id="question">
-				</textarea>
+					<input type="text" name="question" id="question"/>
 				</div>
 				<div>
 					<a id="addoption" data-role="button" data-icon="flat-plus"
@@ -102,7 +101,8 @@
 					</ul>
 					<label for="enddate">End Date</label> <input name="mydate"
 						id="enddate" type="date" data-role="datebox" data-theme="f"
-						data-options='{"mode": "datebox"}'>
+						data-options='{"mode": "datebox","themeButton": "f","themeInput":"f"}'>
+
 
 				</div>
 				<div data-role="fieldcontain">
@@ -117,7 +117,7 @@
 				<div>
 					<a id="selectGroupBtn" data-theme="d" href="#selectgroups"
 						data-role="button" data-icon="flat-new" data-iconpos="right"
-						data-inline="true">Groups</a> <a data-theme="f"
+						data-inline="true">Groups</a> <a data-theme="f" id="selectContactBtn"
 						href="#selectContactsPage" data-role="button" data-icon="plus"
 						data-iconpos="right" data-inline="true">Friends</a>
 				</div>
@@ -243,9 +243,8 @@
 			</div>
 			<div data-role="content">
 				<div id="menu">
-					<p id="questionP"></p>
-
-
+					<fieldset id="questionP" data-role="controlgroup">
+					</fieldset>
 				</div>
 			</div>
 			<div id="footer" data-role="footer" data-id="footer1"
@@ -308,10 +307,9 @@
 			</div>
 			<div data-role="content">
 				<div id="menu">
-					<p id="questionPublic"></p>
+					<div id="questionPublic">
+					</div>
 					<input type="hidden" id="publicPollHidden" name="groupdetails" value="" />
-
-
 				</div>
 			</div>
 			<div id="footer" data-role="footer" data-id="footer1"

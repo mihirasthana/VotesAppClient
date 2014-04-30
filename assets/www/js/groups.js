@@ -1,4 +1,5 @@
 //document.addEventListener("deviceready", onDeviceReady, false);
+
 var globalurl = "http://votesapp.elasticbeanstalk.com";
 $(function(){
 	var phonenum="";
@@ -13,9 +14,18 @@ $(function(){
 	//alert(sessionStorage.phonenum);
 	getMyGroups(sessionStorage.phonenum);
 	//alert("In OnDeviceReady"+phonenum);
-	getContactList();
+	//getContactList();
 
-	
+	document.addEventListener("backbutton", onBackButtonDown, false);
+
+	function onBackButtonDown() {
+	    // Handle the back button
+		//alert("back button pressed.");
+		//if($.mobile.activePage[0].baseURI == )
+		//alert($.mobile.activePage[0].baseURI);
+		//window.location='./home.html';
+	}
+
 
 	function getContactList()
 	{
@@ -35,8 +45,9 @@ $(function(){
 					}
 				}
 			}
+			$("#contactlist").empty();
 			$( html ).appendTo( "#contactlist" );
-
+			$("#contactlist").listview("refresh");
 		};
 		function onError(contactError) {
 			alert('onError!');
@@ -70,11 +81,24 @@ $(function(){
 		return createGroupString;
 
 	}
+	
+	$("#create-group").click(function() {
+		
+		$("#groupname").val("");
+		getContactList();
+		
+	});
+	
+	
 //	{"name":"family","phoneNumber":9960085953,"members":[9985565624,8875598624]}
 
+	
+	
+	
 	$( "#creategroup" ).click(function() {
 		alert("Button Clicked");
 		var data=getCreateGroupJSON();
+		//alert(data);
 		var url = globalurl +"/api/user/group";		
 		//var url="http://10.0.2.2:8080/VotesApp/api/user/group";
 		$.ajax({
@@ -86,6 +110,7 @@ $(function(){
 			success: function(msg){
 				//$("body").append(msg.d);
 				alert("success");
+				getMyGroups(sessionStorage.phonenum);
 			},
 			error: function () {
 				alert("Error");
@@ -97,7 +122,7 @@ $(function(){
 	$( "#delete-groups" ).click(function() {
 		alert("Button Clicked");
 		var data="id="+$("#groupid").val();
-		//alert("Data:"+data);
+		alert("Data:"+data);
 		var url = globalurl +"/api/user/group";	
 		//var url="http://10.0.2.2:8080/VotesApp/api/user/group";
 		$.ajax({
@@ -108,7 +133,8 @@ $(function(){
 			data: data,
 			success: function(msg){
 				//$("body").append(msg.d);
-				alert("success");
+				//alert("success");
+				getMyGroups(sessionStorage.phonenum);
 			},
 			error: function () {
 				alert("Error");
@@ -149,6 +175,7 @@ $(function(){
 					html += '<li>No Groups Found</li>'; 
 				}
 				//alert(html);
+				$( "#myGroupList" ).empty();
 				$( html ).appendTo( "#myGroupList" );
 				//$("#myGroupList").html(html);
 				$("#myGroupList").listview("refresh");
@@ -228,15 +255,19 @@ $(function(){
 						temp_mem_name="";
 						
 					}
-				}		
-				//alert(html);
-				//$("#groupmembers").empty();
-				$("#groupmembers").html(html);
-				//$(html ).appendTo( "#groupmembers" );
-				//$("#groupmembers").listview("refresh");
+				}	
 				location.href="#group-details";
+				//alert(html);
+				$("#groupmembers").empty();
+				//$("#groupmembers").html(html);
+				$( html ).appendTo( "#groupmembers" );
+				//$("#groupmembers").listview("refresh");
+				
 				//$( ".groupListItem" ).bind( "taphold", tapholdHandler );
 				//alert(msg);
+			},
+			complete: function() {
+				$("#groupmembers").listview("refresh");
 			},
 			error: function () {
 				alert("Error");

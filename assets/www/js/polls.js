@@ -8,12 +8,22 @@ $(document).ready(function() {
 function onDeviceReady()
 {
 	sessionStorage.phonenum=getMyPhoneNumber()
-	getContactList();
-	getMyGroups(sessionStorage.phonenum);
-	showMyPolls(sessionStorage.phonenum);
-	showAllPolls(sessionStorage.phonenum);
+	//getContactList();
+	//getMyGroups(sessionStorage.phonenum);
+	//showMyPolls(sessionStorage.phonenum);
+	//showAllPolls(sessionStorage.phonenum);
 
+	document.addEventListener("backbutton", onBackButtonDown, false);
 }
+
+function onBackButtonDown() {
+    // Handle the back button
+	//alert("back button pressed.");
+	//if($.mobile.activePage[0].baseURI == )
+	//alert($.mobile.activePage[0].baseURI);
+	//window.location='./home.html';
+}
+
 //constants
 var phonenum="";
 var poll_question_key="\"poll_question\":";
@@ -46,15 +56,28 @@ function getMyPhoneNumber()
 //}
 $('#addoption').click(function()
 		{
-	var num=$('#optionlistul li').length +1;
-	var html="<li id='listoption"+num+"' data-role='fieldcontain'>" +
-	"<label id='labeloption"+num+"' for='option' style='font-weight: bold'>Option"+num+":</label> " +
-	"<input type='text' name='option"+num+"' id='option"+num+"' /></li>";
-	alert(html);
-	$( html ).appendTo( "#optionlistul" );
-	$("#optionlistul").listview("refresh").trigger("create");
+	var count = $("#optionlistul > li").length;
+	if(count < 6) {
+	var num=count +1;
+		var html="<li id='listoption"+num+"' data-role='fieldcontain'>" +
+		"<label id='labeloption"+num+"' for='option' style='font-weight: bold'>Option"+num+":</label> " +
+		"<input type='text' name='option"+num+"' id='option"+num+"' /></li>";
+		//alert(html);
+		$( html ).appendTo( "#optionlistul" );
+		$("#optionlistul").listview("refresh").trigger("create");
+	}
 
 		});
+
+$("#deleteoption").click(function() {
+	var count = $("#optionlistul > li").length;
+	if(count > 2) {
+		$("#listoption"+count).remove();
+		$("#optionlistul").listview("refresh");
+	}
+})
+
+
 function getPollDate()
 {
 	var today = new Date();
@@ -145,8 +168,10 @@ function getContactList()
 				}
 			}
 		}
+		
+		$("#selectContactsList").empty();
 		$( html ).appendTo( "#selectContactsList" );
-
+		$("#selectContactsList").listview("refresh");
 	};
 	function onError(contactError) {
 		alert('onError!');
@@ -158,6 +183,27 @@ function getContactList()
 	var fields       =  ["displayName", "name", "phoneNumbers"];
 	navigator.contacts.find(fields, onSuccess, onError, options);
 }
+
+
+$("#selectContactBtn").click(function() {	
+	//alert("Friends button");
+	getContactList();	
+});
+
+$("#selectGroupBtn").click(function() {	
+	//alert("Friends button");
+	getMyGroups(sessionStorage.phonenum);	
+});
+
+$("#assignedPollsBtn").click(function() {	
+	//alert("Friends button");
+	showMyPolls(sessionStorage.phonenum);	
+});
+
+$("#publicPollsBtn").click(function() {	
+	//alert("Friends button");
+	showAllPolls(sessionStorage.phonenum);	
+});
 
 
 $('.submitPoll').click(function()
@@ -175,6 +221,7 @@ $('.submitPoll').click(function()
 		success: function(msg){
 			//$("body").append(msg.d);
 			//alert("success");
+			location.href="#home-page";
 		},
 		error: function () {
 			alert("Error");
@@ -220,11 +267,17 @@ function getMyGroups(phonenum){
 				html += '<li>No Groups Found</li>'; 
 			}
 			//alert(html);
+			$( "#selectgroupslist" ).empty();
 			$( html ).appendTo( "#selectgroupslist" );
+			//$("#myGroupList").html(html);
+			
 			//$("#myGroupList").html(html);
 			//$("#selectgroupslist").listview("refresh").trigger("create");
 			//$( ".groupListItem" ).bind( "taphold", tapholdHandler );
 			//$( ".groupListItem" ).bind( "tap", getMyGroupDetails );
+		},
+		complete: function() {
+			$("#selectgroupslist").listview("refresh").trigger("create");
 		},
 		error: function () {
 			alert("Error");
@@ -277,6 +330,7 @@ function showMyPolls(phonenum)
 				html1 += '<li>No Assigned Polls Exists!!</li>';
 
 			//$('#questionP').html(html3 );
+			$("#myAssignedList").empty();
 			$( html1 ).appendTo( "#myAssignedList" );
 			//alert(html1);
 			$( ".polldetailssclass" ).bind( "tap", tapHandler );
@@ -284,6 +338,9 @@ function showMyPolls(phonenum)
 			//$("#myAssignedList").listview("refresh");
 
 
+		},
+		complete: function() {
+			$("#myAssignedList").listview("refresh");
 		},
 		error: function () {
 			alert("Error");
@@ -314,7 +371,7 @@ function tapHandler( event ){
 			var html= "";
 			if(!(isEmpty(obj)))
 			{
-				alert(obj.This_Poll.poll_question);
+				//alert(obj.This_Poll.poll_question);
 				html+='<p data-theme="a">'+obj.This_Poll.poll_question+'</p><fieldset data-role="controlgroup"><legend>Options</legend>';
 				tempArr = escapeCharsForOptions(obj.This_Poll.poll_options);
 				for(var j=0;j<tempArr.length;j++)
@@ -362,6 +419,7 @@ function showAllPolls(phonenum)
 				html1 += '<li>No Assigned Polls Exists!!</li>';
 
 			//$('#questionP').html(html3 );
+			$("#myAllPollsList").empty();
 			$( html1 ).appendTo( "#myAllPollsList" );
 			//alert(html1);
 			$( ".publicpolldetailssclass" ).bind( "tap", tapPublicPollDetails );
@@ -369,6 +427,9 @@ function showAllPolls(phonenum)
 			//$("#myAssignedList").listview("refresh");
 
 
+		},
+		complete: function() {
+			$("#myAllPollsList").listview("refresh");
 		},
 		error: function () {
 			alert("Error");
@@ -395,17 +456,30 @@ function tapPublicPollDetails( event ){
 			var html= "";
 			if(!(isEmpty(obj)))
 			{
-				html+='<p data-theme="a">'+obj.This_Poll[0].poll_question+'</p><fieldset data-role="controlgroup"><legend>Options</legend>';
+				/*
+				 <fieldset data-role="controlgroup" data-mini="true">
+				 	<legend>Vertical:</legend>
+					    <input name="radio-choice-v-2" id="radio-choice-v-2a" value="on" checked="checked" type="radio">
+					    <label for="radio-choice-v-2a">One</label>
+					    <input name="radio-choice-v-2" id="radio-choice-v-2b" value="off" type="radio">
+					    <label for="radio-choice-v-2b">Two</label>
+					    <input name="radio-choice-v-2" id="radio-choice-v-2c" value="other" type="radio">
+					    <label for="radio-choice-v-2c">Three</label>
+			     </fieldset>
+				 */
+				
+				html+='<legend>' + obj.This_Poll[0].poll_question + '</legend>';
 				tempArr = escapeCharsForOptions(obj.This_Poll[0].poll_options);
 				for(var j=0;j<tempArr.length;j++)
 				{
-					html+='<input type="radio" name="choice1" value="'+tempArr[j]+'">'+tempArr[j];
+					html+= '<input type="radio" name="radio-choice-v-6" value="'+tempArr[j]+'" id="radio-choice-v-6' + j +'" checked="checked"><label for="radio-choice-v-6' + j +'">'+ tempArr[j] +'</label>';
 				}
 				tempArr = [];
-
 			}
 			//alert("html:"+html);
-			$('#questionPublic').html(html );
+			//$('#questionPublic').html(html );
+			$('#questionPublic').empty();
+			$(html).appendTo("#questionPublic");
 			location.href="#showPublicPollDetailsPage";
 		},
 		error: function () {
@@ -440,6 +514,7 @@ $('#votePublic').click(function()
 		data: data,
 		success: function(msg){
 			//alert("success");
+			location.href="#home-page";
 		},
 		error: function () {
 			alert("Error");
