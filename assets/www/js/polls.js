@@ -1,24 +1,5 @@
 document.addEventListener("deviceready", onDeviceReady, false);
 var globalurl = "http://votesapp.elasticbeanstalk.com";
-function onDeviceReady()
-{
-	sessionStorage.phonenum=getMyPhoneNumber();
-	//showMyCreatedPolls(sessionStorage.phonenum);
-	//getContactList();
-	//getMyGroups(sessionStorage.phonenum);
-	//showMyPolls(sessionStorage.phonenum);
-	//showAllPolls(sessionStorage.phonenum);
-
-	document.addEventListener("backbutton", onBackButtonDown, false);
-}
-
-function onBackButtonDown() {
-	// Handle the back button
-	//alert("back button pressed.");
-	//if($.mobile.activePage[0].baseURI == )
-	//alert($.mobile.activePage[0].baseURI);
-	//window.location='./home.html';
-}
 //constants
 var phonenum="";
 var poll_question_key="\"poll_question\":";
@@ -36,6 +17,49 @@ var poll_participants_key="\"poll_participants\":";
 var poll_public_key="\"poll_public\":";
 var poll_voter_location_key="\"poll_voter_location\":";
 var dq="\"";
+var poll_voter_location_Latitude = '';
+var poll_voter_location_Longitude= '';
+var pictureSource;   // picture source
+var destinationType; // sets the format of returned value 
+function onDeviceReady()
+{
+	sessionStorage.phonenum=getMyPhoneNumber();
+	//showMyCreatedPolls(sessionStorage.phonenum);
+	//getContactList();
+	//getMyGroups(sessionStorage.phonenum);
+	//showMyPolls(sessionStorage.phonenum);
+	//showAllPolls(sessionStorage.phonenum);
+	navigator.geolocation.getCurrentPosition(onSuccesss, onErrors);
+
+	pictureSource=navigator.camera.PictureSourceType;
+	destinationType=navigator.camera.DestinationType;
+
+	document.addEventListener("backbutton", onBackButtonDown, false);
+}
+
+function onBackButtonDown() {
+	// Handle the back button
+	//alert("back button pressed.");
+	//if($.mobile.activePage[0].baseURI == )
+	//alert($.mobile.activePage[0].baseURI);
+	//window.location='./home.html';
+}
+
+var onSuccesss = function(position) {
+
+	poll_voter_location_Latitude = position.coords.latitude;
+	poll_voter_location_Longitude = position.coords.longitude;
+	alert('Latitude: '          + poll_voter_location_Latitude          + '\n' +
+			'Longitude: '         + poll_voter_location_Longitude         + '\n');
+};
+
+//onError Callback receives a PositionError object
+
+function onErrors(error) {
+	alert('code: '    + error.code    + '\n' +
+			'message: ' + error.message + '\n');
+}
+
 
 function getMyPhoneNumber()
 {
@@ -506,8 +530,8 @@ function getVoteJSON(msg,type)
 	voteString+=poll_voter_option_key+temp+','+poll_voter_id_key+dq+sessionStorage.phonenum+dq+','+poll_question_key+dq+obj.This_Poll[0].poll_question+dq+','+poll_options_key+obj.This_Poll[0].poll_options+','+
 	poll_create_date_key+dq+obj.This_Poll[0].poll_create_date+dq+','+poll_end_date_key+dq+obj.This_Poll[0].poll_end_date+dq+','+
 	poll_creator_key+dq+obj.This_Poll[0].poll_creator+dq+','+poll_category_key+dq+obj.This_Poll[0].poll_category+dq+','+poll_voter_location_key+
-	'{'+dq+'latitute'+dq+':'+dq+'37.3331002'+dq+','+dq+'longitude'+dq+':'+dq+'-121.9116864'+dq+'}}';
-	//alert("VoteString:"+voteString);
+	'{'+dq+'latitute'+dq+':'+dq+poll_voter_location_Latitude+dq+','+dq+poll_voter_location_Longitude+dq+':'+dq+'-121.9116864'+dq+'}}';
+	alert("VoteString:"+voteString);
 	return voteString;
 }
 $('#votePublic').click(function()
@@ -631,3 +655,51 @@ $('#quickVote').click(function()
 	showAllPolls(sessionStorage.phonenum);
 
 		});
+
+
+
+function onPhotoDataSuccess(imageData) {
+
+	var smallImage = document.getElementById('smallImage');
+	var largeImage = document.getElementById('largeImage');
+	smallImage.src = "data:image/jpeg;base64," + imageData;
+	largeImage.src = "data:image/jpeg;base64," + imageData;
+}
+
+function onPhotoURISuccess(imageURI) {
+	
+	var smallImage = document.getElementById('smallImage');
+	var largeImage = document.getElementById('largeImage');
+	smallImage.src = imageURI;
+	largeImage.src = imageURI;
+}
+
+
+function getPhoto(source) {
+	// Retrieve image file location from specified source
+	navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50, 
+		destinationType: destinationType.FILE_URI,
+		sourceType: source });
+}
+
+function onFail(message) {
+	alert('Failed because: ' + message);
+}
+
+$('#CapturePhoto').click(function()
+		{
+	navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
+		destinationType: destinationType.DATA_URL });
+		});
+
+$('#ImageGallery').click(function()
+		{
+	getPhoto(pictureSource.PHOTOLIBRARY);
+		});
+
+$( ".photopopup" ).on({
+    popupbeforeposition: function() {
+        var maxHeight = $( window ).height() - 60 + "px";
+        $( ".photopopup img" ).css( "max-height", maxHeight );
+    }
+});

@@ -41,9 +41,9 @@
 				</div>
 				<a data-theme="d" href="#createpoll" data-role="button"
 					data-icon="flat-new" data-iconpos="right">Create Poll</a> <a
-					id="quickVote" data-theme="f" href="#showAllPollsPage" data-role="button"
-					data-icon="plus" data-iconpos="right">Quick Vote</a><a
-					data-theme="a" href="#polls-page" data-role="button"
+					id="quickVote" data-theme="f" href="#showAllPollsPage"
+					data-role="button" data-icon="plus" data-iconpos="right">Quick
+					Vote</a><a data-theme="a" href="#polls-page" data-role="button"
 					data-icon="flat-eye" data-iconpos="right">Polls</a> <a
 					data-theme="g" href="#trending" data-role="button"
 					data-icon="flat-eye" data-iconpos="right">Trending</a> <a
@@ -76,10 +76,12 @@
 			</div>
 
 			<div data-role="content">
-				<a data-theme="d" href="#showMyCreatedPollsPage" data-role="button" data-icon="flat-new"
-					data-iconpos="right" id="showCreatedPollsBtn">My Created Polls</a> <a data-theme="f"
-					href="#showPollsPage" id="assignedPollsBtn" data-role="button" data-icon="plus" data-iconpos="right">Polls
-					To Vote</a><a data-theme="a" id="publicPollsBtn" href="#showAllPollsPage" data-role="button"
+				<a data-theme="d" href="#showMyCreatedPollsPage" data-role="button"
+					data-icon="flat-new" data-iconpos="right" id="showCreatedPollsBtn">My
+					Created Polls</a> <a data-theme="f" href="#showPollsPage"
+					id="assignedPollsBtn" data-role="button" data-icon="plus"
+					data-iconpos="right">Polls To Vote</a><a data-theme="a"
+					id="publicPollsBtn" href="#showAllPollsPage" data-role="button"
 					data-icon="flat-eye" data-iconpos="right">Public Polls</a>
 
 
@@ -111,8 +113,8 @@
 			</div>
 			<div data-role="content">
 				<div data-role="fieldcontain">
-					<label for="question" style="font-weight: bold">Question:</label>
-					<input type="text" name="question" id="question"/>
+					<label for="question" style="font-weight: bold">Question:</label> <input
+						type="text" name="question" id="question" />
 				</div>
 				<div>
 					<a id="addoption" data-role="button" data-icon="flat-plus"
@@ -134,7 +136,33 @@
 						id="enddate" type="date" data-role="datebox" data-theme="f"
 						data-options='{"mode": "datebox","themeButton": "f","themeInput":"f"}'>
 
-
+					<div>
+						<a data-theme="d" data-role="button" href="#imagePopup"
+							data-rel="popup" data-icon="flat-new" data-iconpos="right"
+							>Choose an Image</a>
+						<!-- select image popup  -->
+						<div data-role="popup" id="imagePopup" data-theme="b">
+							<ul data-role="listview" data-inset="true"
+								style="min-width: 210px;" data-theme="c">
+								<li data-role="divider" data-theme="b">Choose Image From:</li>
+								<li><a href="#" id="CapturePhoto">Camera</a></li>
+								<li><a href="#" id="ImageGallery">Gallery</a></li>
+							</ul>
+						</div>
+					</div>
+					<div align='center'> <a
+							href="#popupChoseImage" data-rel="popup" data-position-to="window"
+							data-transition="fade"><img class="popphoto" src=""
+							style="width:30%;" id="smallImage"
+							 /></a>
+						<div data-role="popup" id="popupChoseImage" data-overlay-theme="a"
+							data-theme="d" data-corners="false">
+							<a href="#" data-rel="back" data-role="button" data-theme="a"
+								data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img
+								class="popphoto" id="largeImage" src=""
+								style="max-height: 512px;">
+						</div>
+					</div>
 				</div>
 				<div data-role="fieldcontain">
 					<label for="select-choice-1" class="select">Categories</label> <select
@@ -148,9 +176,10 @@
 				<div>
 					<a id="selectGroupBtn" data-theme="d" href="#selectgroups"
 						data-role="button" data-icon="flat-new" data-iconpos="right"
-						data-inline="true">Groups</a> <a data-theme="f" id="selectContactBtn"
-						href="#selectContactsPage" data-role="button" data-icon="plus"
-						data-iconpos="right" data-inline="true">Friends</a>
+						data-inline="true">Groups</a> <a data-theme="f"
+						id="selectContactBtn" href="#selectContactsPage"
+						data-role="button" data-icon="plus" data-iconpos="right"
+						data-inline="true">Friends</a>
 				</div>
 
 			</div>
@@ -166,6 +195,8 @@
 				</div>
 			</div>
 		</div>
+
+
 
 		<!-- select  groups to publish poll  -->
 
@@ -339,9 +370,9 @@
 			</div>
 			<div data-role="content">
 				<div id="menu">
-					<fieldset id="questionP" data-role="controlgroup">
-					</fieldset>
-					<input type="hidden" id="privatePollHidden" name="groupdetails" value="" />
+					<fieldset id="questionP" data-role="controlgroup"></fieldset>
+					<input type="hidden" id="privatePollHidden" name="groupdetails"
+						value="" />
 				</div>
 			</div>
 			<div id="footer" data-role="footer" data-id="footer1"
@@ -404,9 +435,9 @@
 			</div>
 			<div data-role="content">
 				<div id="menu">
-					<div id="questionPublic">
-					</div>
-					<input type="hidden" id="publicPollHidden" name="groupdetails" value="" />
+					<div id="questionPublic"></div>
+					<input type="hidden" id="publicPollHidden" name="groupdetails"
+						value="" />
 				</div>
 			</div>
 			<div id="footer" data-role="footer" data-id="footer1"
