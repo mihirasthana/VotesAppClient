@@ -27,7 +27,7 @@
 				data-position="fixed" data-theme="f" data-tap-toggle="false"
 				class="ui-header">
 				<h1>Groups</h1>
-				<a href="./home.html" data-role="button" data-icon="arrow-l"
+				<a href="#home-page" data-role="button" data-icon="arrow-l"
 					data-inline="true">Back</a>
 			</div>
 
@@ -131,7 +131,7 @@
 				data-position="fixed" data-theme="f" data-tap-toggle="false"
 				class="ui-header">
 				<h1>VotesApp</h1>
-				<a href="./home.html" data-role="button" data-icon="arrow-l"
+				<a href="#home-page" data-role="button" data-icon="arrow-l"
 					data-inline="true">Back</a>
 			</div>
 			<div data-role="content">

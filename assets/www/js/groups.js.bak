@@ -263,9 +263,6 @@ $(function(){
 				//$( ".groupListItem" ).bind( "taphold", tapholdHandler );
 				//alert(msg);
 			},
-			complete: function() {
-				$("#groupmembers").listview("refresh");
-			},
 			error: function () {
 				alert("Error");
 			}
