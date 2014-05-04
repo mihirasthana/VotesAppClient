@@ -21,6 +21,7 @@ var poll_voter_location_Latitude = '';
 var poll_voter_location_Longitude= '';
 var pictureSource;   // picture source
 var destinationType; // sets the format of returned value 
+var poll_media_type_key = "\"poll_media_type\":";
 function onDeviceReady()
 {
 	sessionStorage.phonenum=getMyPhoneNumber();
@@ -49,8 +50,6 @@ var onSuccesss = function(position) {
 
 	poll_voter_location_Latitude = position.coords.latitude;
 	poll_voter_location_Longitude = position.coords.longitude;
-	alert('Latitude: '          + poll_voter_location_Latitude          + '\n' +
-			'Longitude: '         + poll_voter_location_Longitude         + '\n');
 };
 
 //onError Callback receives a PositionError object
@@ -121,6 +120,7 @@ function getCreatePollJSON(pollType){
 	var createPollString = "{"+poll_question_key+"\""+($('#question').val())+"\","+poll_options_key+"[";
 	var selectOptions = new Array();
 	var temp="";
+	var mediaType = 1;
 	for(i=1;i<=($('#optionlistul li').length);i++)
 	{
 		temp=temp+$('#option'+i).val();
@@ -158,12 +158,12 @@ function getCreatePollJSON(pollType){
 			if(i !=(selectedValues.length-1))
 				temp=temp+",";
 		}
-		createPollString=createPollString+poll_participants_key+"["+temp+"],"+poll_public_key+dq+"no"+dq+"}";
+		createPollString=createPollString+poll_participants_key+"["+temp+"],"+poll_public_key+dq+"no"+dq+','+poll_media_type_key+mediaType+"}";
 		temp="";
 	}
 	else
 	{
-		createPollString=createPollString+poll_groupid_key+'[],'+poll_participants_key+'[],'+poll_public_key+dq+'yes'+dq+'}';
+		createPollString=createPollString+poll_groupid_key+'[],'+poll_participants_key+'[],'+poll_public_key+dq+'yes'+dq+','+poll_media_type_key+mediaType+'}';
 
 	}
 
@@ -241,6 +241,10 @@ $('.submitPoll').click(function()
 		success: function(msg){
 			//$("body").append(msg.d);
 			//alert("success");
+			var obj = jQuery.parseJSON( ''+ msg +'' );
+			//alert("Poll Media Type:"+poll_media_type_key+($('#smallImage').attr("src"))+"msg:"+msg+" pollid:"+obj.PollId);
+			//if(($('#smallImage').attr("src"))!= null || ($('#smallImage').attr("src")) !='' )
+				sendMediaToS3(1,($('#smallImage').attr("src")),obj.PollId);
 			location.href="#home-page";
 		},
 		error: function () {
@@ -374,7 +378,7 @@ function redirectToGroup()
 function tapHandler( event ){
 	//alert("tapped");
 	var data=event.target.getAttribute("id");
-	//alert("id:"+data);
+	alert("id:"+data);
 	var url = globalurl +"/api/votesapp/poll/ById/"+data;
 	//var url="http://10.0.2.2:8080/VotesApp/api/votesapp/poll/ById/"+data;
 	var temp_mem_name="";
@@ -530,8 +534,8 @@ function getVoteJSON(msg,type)
 	voteString+=poll_voter_option_key+temp+','+poll_voter_id_key+dq+sessionStorage.phonenum+dq+','+poll_question_key+dq+obj.This_Poll[0].poll_question+dq+','+poll_options_key+obj.This_Poll[0].poll_options+','+
 	poll_create_date_key+dq+obj.This_Poll[0].poll_create_date+dq+','+poll_end_date_key+dq+obj.This_Poll[0].poll_end_date+dq+','+
 	poll_creator_key+dq+obj.This_Poll[0].poll_creator+dq+','+poll_category_key+dq+obj.This_Poll[0].poll_category+dq+','+poll_voter_location_key+
-	'{'+dq+'latitute'+dq+':'+dq+poll_voter_location_Latitude+dq+','+dq+poll_voter_location_Longitude+dq+':'+dq+'-121.9116864'+dq+'}}';
-	alert("VoteString:"+voteString);
+	'{'+dq+'latitute'+dq+':'+dq+poll_voter_location_Latitude+dq+','+dq+'longitude'+dq+':'+dq+poll_voter_location_Longitude+dq+'}}';
+	//alert("VoteString:"+voteString);
 	return voteString;
 }
 $('#votePublic').click(function()
@@ -545,7 +549,7 @@ $('#votePublic').click(function()
 		url: url,
 		data: data,
 		success: function(msg){
-			alert("success");
+			alert("Public Poll Voted Successfully");
 		},
 		error: function () {
 			alert("Error");
@@ -667,7 +671,7 @@ function onPhotoDataSuccess(imageData) {
 }
 
 function onPhotoURISuccess(imageURI) {
-	
+
 	var smallImage = document.getElementById('smallImage');
 	var largeImage = document.getElementById('largeImage');
 	smallImage.src = imageURI;
@@ -697,9 +701,90 @@ $('#ImageGallery').click(function()
 	getPhoto(pictureSource.PHOTOLIBRARY);
 		});
 
-$( ".photopopup" ).on({
-    popupbeforeposition: function() {
-        var maxHeight = $( window ).height() - 60 + "px";
-        $( ".photopopup img" ).css( "max-height", maxHeight );
-    }
+$(".photopopup" ).on({
+	popupbeforeposition: function() {
+		var maxHeight = $( window ).height() - 60 + "px";
+		$( ".photopopup img" ).css( "max-height", maxHeight );
+	}
 });
+
+
+/*$('#GetAudio').click(function()
+		{
+
+		});*/
+function updateQueryStringParameter(uri, key, value) {
+	var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+	var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+	if (uri.match(re)) {
+		return uri.replace(re, '$1' + key + "=" + value + '$2');
+	}
+	else {
+		return uri + separator + key + "=" + value;
+	}
+}
+
+/*function sendMediaToS3(type,imgUrl,pollid)
+{
+	var df = new FormData();
+	alert("imgUrl:"+imgUrl);
+	var url = globalurl+"votesapp/poll/media";
+	var key= "pollid"; 
+	key = encodeURI(key);
+	var value = pollid;
+	value =  encodeURI(value);
+	url = updateQueryStringParameter(url,key,value);
+	alert("url:"+url);
+	$.ajax({
+		url: url,
+		type: 'POST',
+		data:  imgUrl,
+		async:false,
+		contentType : false,
+		mimeType:"multipart/form-data",
+		success: function(msg)
+		{
+			alert("Image sent success:"+msg);
+		},
+		error: function(jqXHR, textStatus, errorThrown) 
+		{
+			alert("Image sent error:"+errorThrown);
+		}          
+	});
+}*/
+
+
+function sendMediaToS3(type,imageURI,pollid) {
+	var url = globalurl+"/api/votesapp/poll/media";
+	alert(url);
+	alert("Image Uri:"+imageURI);
+	var options = new FileUploadOptions();
+	options.fileKey="file";
+	options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
+	options.mimeType="image/jpeg";
+	/*options.headers = {
+			Connection: "close"
+	}*/
+	options.chunkedMode = false;
+
+	var params = {};
+	params.PollId = pollid;
+	options.params = params;
+
+	var ft = new FileTransfer();
+	ft.upload(imageURI, encodeURI(url), win, fail, options);
+}
+
+function win(r) {
+	alert("Code = " + r.responseCode);
+	alert("Response = " + r.response);
+	alert("Sent = " + r.bytesSent);
+}
+
+function fail(error) {
+	alert("An error has occurred: Code = " + error.code);
+	alert("upload error source " + error.source);
+	alert("upload error target " + error.target);
+}
+
+

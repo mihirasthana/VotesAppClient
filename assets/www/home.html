@@ -138,9 +138,8 @@
 
 					<div>
 						<a data-theme="d" data-role="button" href="#imagePopup"
-							data-rel="popup" data-icon="flat-new" data-iconpos="right"
-							>Choose an Image</a>
-						<!-- select image popup  -->
+							data-rel="popup" data-icon="flat-new" data-iconpos="right">Choose
+							a Media</a>
 						<div data-role="popup" id="imagePopup" data-theme="b">
 							<ul data-role="listview" data-inset="true"
 								style="min-width: 210px;" data-theme="c">
@@ -149,12 +148,41 @@
 								<li><a href="#" id="ImageGallery">Gallery</a></li>
 							</ul>
 						</div>
+
+						<!-- <a href="#popupNested" data-rel="popup" data-role="button"
+							data-inline="true" data-icon="bars" data-theme="d"
+							data-transition="pop" data-iconpos="right"> Choose a Media</a>
+						<div data-role="popup" id="popupNested" data-theme="none">
+							<div data-role="collapsible-set" data-theme="b"
+								data-content-theme="c" data-collapsed-icon="arrow-r"
+								data-expanded-icon="arrow-d" style="margin: 0; width: 250px;">
+								<div data-role="collapsible" data-inset="false">
+									<h2>Image</h2>
+									<ul data-role="listview"
+										style="min-width: 210px;" data-theme="c">
+										<li><a href="#" id="CapturePhoto">Camera</a></li>
+										<li><a href="#" id="ImageGallery">Gallery</a></li>
+									</ul>
+								</div>
+
+								<ul data-role="listview" data-inset="true"
+									style="min-width: 210px;" data-theme="e">
+									<li><a href="#" data-rel="dialog" id="GetAudio">Audio</a></li>
+								</ul>
+
+								<ul data-role="listview" data-inset="true"
+									style="min-width: 210px;" data-theme="e">
+									<li><a href="#" id="GetVideo">Video</a></li>
+								</ul>
+							</div>
+							/collapsible set
+						</div>
+						/popup -->
 					</div>
-					<div align='center'> <a
-							href="#popupChoseImage" data-rel="popup" data-position-to="window"
-							data-transition="fade"><img class="popphoto" src=""
-							style="width:30%;" id="smallImage"
-							 /></a>
+					<div align='center' id="ImageContent">
+						<a href="#popupChoseImage" data-rel="popup"
+							data-position-to="window" data-transition="fade"><img
+							class="popphoto" src="" style="width: 30%;" id="smallImage" /></a>
 						<div data-role="popup" id="popupChoseImage" data-overlay-theme="a"
 							data-theme="d" data-corners="false">
 							<a href="#" data-rel="back" data-role="button" data-theme="a"
@@ -163,7 +191,14 @@
 								style="max-height: 512px;">
 						</div>
 					</div>
-				</div>
+					<!-- <div align='center' id="AudioContent">
+
+						<audio controls>
+							<source id="selectedAudio" src="" type="audio/mpeg">
+						</audio>
+					</div>
+					<div align='center' id="VideoContent"></div>
+				</div> -->
 				<div data-role="fieldcontain">
 					<label for="select-choice-1" class="select">Categories</label> <select
 						name="select-choice-1" id="categories">
