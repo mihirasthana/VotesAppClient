@@ -1,5 +1,6 @@
 //document.addEventListener("deviceready", onDeviceReady, false);
 var globalurl = "http://votesapp.elasticbeanstalk.com";
+
 $(function(){
 	var phonenum="";
 	var name_key="\"name\":";
@@ -150,7 +151,7 @@ $(function(){
 
 	function getMyGroups(phonenum){
 		//alert("get my groups:groups" + phonenum);
-		var data="phone_number={"+phonenum_key+phonenum+"}";
+		var data="phone_number={"+phonenum_key+ "\""+phonenum+"\"}";
 		var url = globalurl +"/api/user/groups";	
 		//var url="http://10.0.2.2:8080/VotesApp/api/user/groups";
 		$.ajax({
@@ -242,7 +243,8 @@ $(function(){
 				var obj = jQuery.parseJSON( ''+ msg +'' );
 				var html= "";
 				if(obj != null) {
-					//alert(obj.name);
+					obj = jQuery.parseJSON( ''+ obj.group +'' );
+					
 					$("#groupid").val(obj._id.$oid);
 					html = "<li data-theme='a'><h1>Group Name:"+obj.name+"</h1></li><li data-role='list-divider'>Group Members</li>";
 					for(k=0;k<obj.members.length;k++){

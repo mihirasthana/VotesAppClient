@@ -5,7 +5,7 @@
 <meta name="format-detection" content="telephone=no" />
 <meta name="viewport"
 	content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, target-densitydpi=medium-dpi" />
-
+<link type="text/css" href="css/jquery.jqplot.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="js/jQM-flat/jquery.mobile.flatui.css">
 <link rel="stylesheet" type="text/css" href="css/index.css" />
 <link type="text/css"
@@ -14,8 +14,12 @@
 <!-- <script type="text/javascript" src="js/fastclick.min.js"></script> -->
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>
+
 <script type="text/javascript"
 	src="js/jQueryMobile/jquery.mobile-1.3.2.min.js"></script>
+
+
+	
 <script type="text/javascript" charset="utf-8" src="telephonenumber.js"></script>
 <script type="text/javascript"
 	src="http://dev.jtsage.com/cdn/datebox/latest/jqm-datebox.core.min.js"></script>
@@ -58,7 +62,7 @@
 				<div id="navbar" data-role="navbar">
 					<ul>
 						<li><a id="groupsBtn" href="#" data-icon="flat-menu"
-							data-theme="d" onclick="redirectToGroup()">Groups</a></li>
+							data-theme="d" onclick="window.location='./groups.html'">Groups</a></li>
 						<li><a id="friends" href="#friendspage" data-icon="flat-man"
 							data-theme="f">Friends</a></li>
 						<li><a id="settings" href="#settingspage"
@@ -73,6 +77,8 @@
 				data-position="fixed" data-theme="f" data-tap-toggle="false"
 				class="ui-header">
 				<h1>VotesApp</h1>
+				<a href="#home-page" data-role="button" data-icon="arrow-l"
+					data-inline="true">Back</a>
 			</div>
 
 			<div data-role="content">
@@ -114,7 +120,7 @@
 			<div data-role="content">
 				<div data-role="fieldcontain">
 					<label for="question" style="font-weight: bold">Question:</label> <input
-						type="text" name="question" id="question" />
+						type="text" name="question" id="question" class="clearInput"/>
 				</div>
 				<div>
 					<a id="addoption" data-role="button" data-icon="flat-plus"
@@ -127,78 +133,42 @@
 					<ul data-role="listview" data-inset="true" id="optionlistul">
 						<li id="listoption1" data-role="fieldcontain"><label
 							id="labeloption1" for="name" style="font-weight: bold">Option
-								1:</label> <input type="text" name="option1" id="option1" /></li>
+								1:</label> <input type="text" class="clearInput" name="option1" id="option1" /></li>
 						<li id="listoption2" data-role="fieldcontain"><label
 							id="labeloption2" for="name" style="font-weight: bold">Option
-								2:</label> <input type="text" name="option2" id="option2" /></li>
+								2:</label> <input type="text" class="clearInput" name="option2" id="option2" /></li>
 					</ul>
-					<label for="enddate">End Date</label> <input name="mydate"
+				</div>
+				<div>
+					<label for="enddate">End Date</label> <input class="clearInput" name="mydate"
 						id="enddate" type="date" data-role="datebox" data-theme="f"
 						data-options='{"mode": "datebox","themeButton": "f","themeInput":"f"}'>
-
-					<div>
-						<a data-theme="d" data-role="button" href="#imagePopup"
-							data-rel="popup" data-icon="flat-new" data-iconpos="right">Choose
-							a Media</a>
-						<div data-role="popup" id="imagePopup" data-theme="b">
-							<ul data-role="listview" data-inset="true"
-								style="min-width: 210px;" data-theme="c">
-								<li data-role="divider" data-theme="b">Choose Image From:</li>
-								<li><a href="#" id="CapturePhoto">Camera</a></li>
-								<li><a href="#" id="ImageGallery">Gallery</a></li>
-							</ul>
-						</div>
-
-						<!-- <a href="#popupNested" data-rel="popup" data-role="button"
-							data-inline="true" data-icon="bars" data-theme="d"
-							data-transition="pop" data-iconpos="right"> Choose a Media</a>
-						<div data-role="popup" id="popupNested" data-theme="none">
-							<div data-role="collapsible-set" data-theme="b"
-								data-content-theme="c" data-collapsed-icon="arrow-r"
-								data-expanded-icon="arrow-d" style="margin: 0; width: 250px;">
-								<div data-role="collapsible" data-inset="false">
-									<h2>Image</h2>
-									<ul data-role="listview"
-										style="min-width: 210px;" data-theme="c">
-										<li><a href="#" id="CapturePhoto">Camera</a></li>
-										<li><a href="#" id="ImageGallery">Gallery</a></li>
-									</ul>
-								</div>
-
-								<ul data-role="listview" data-inset="true"
-									style="min-width: 210px;" data-theme="e">
-									<li><a href="#" data-rel="dialog" id="GetAudio">Audio</a></li>
-								</ul>
-
-								<ul data-role="listview" data-inset="true"
-									style="min-width: 210px;" data-theme="e">
-									<li><a href="#" id="GetVideo">Video</a></li>
-								</ul>
-							</div>
-							/collapsible set
-						</div>
-						/popup -->
+				</div>
+				<div>
+					<a data-theme="d" data-role="button" href="#imagePopup"
+						data-rel="popup" data-icon="flat-new" data-iconpos="right">Choose
+						a Media</a>
+					<div data-role="popup" id="imagePopup" data-theme="b">
+						<ul data-role="listview" data-inset="true"
+							style="min-width: 210px;" data-theme="c">
+							<li data-role="divider" data-theme="b">Choose Image From:</li>
+							<li><a href="#" id="CapturePhoto">Camera</a></li>
+							<li><a href="#" id="ImageGallery">Gallery</a></li>
+						</ul>
 					</div>
-					<div align='center' id="ImageContent">
-						<a href="#popupChoseImage" data-rel="popup"
-							data-position-to="window" data-transition="fade"><img
-							class="popphoto" src="" style="width: 30%;" id="smallImage" /></a>
-						<div data-role="popup" id="popupChoseImage" data-overlay-theme="a"
-							data-theme="d" data-corners="false">
-							<a href="#" data-rel="back" data-role="button" data-theme="a"
-								data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img
-								class="popphoto" id="largeImage" src=""
-								style="max-height: 512px;">
-						</div>
+				</div>
+				<div align='center' id="ImageContent">
+					<a href="#popupChoseImage" data-rel="popup"
+						data-position-to="window" data-transition="fade"><img
+						class="popphoto" src="" style="width: 30%;" id="smallImage" /></a>
+					<div data-role="popup" id="popupChoseImage" data-overlay-theme="a"
+						data-theme="d" data-corners="false">
+						<a href="#" data-rel="back" data-role="button" data-theme="a"
+							data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img
+							class="popphoto" id="largeImage" src=""
+							style="max-height: 512px;">
 					</div>
-					<!-- <div align='center' id="AudioContent">
-
-						<audio controls>
-							<source id="selectedAudio" src="" type="audio/mpeg">
-						</audio>
-					</div>
-					<div align='center' id="VideoContent"></div>
-				</div> -->
+				</div>
 				<div data-role="fieldcontain">
 					<label for="select-choice-1" class="select">Categories</label> <select
 						name="select-choice-1" id="categories">
@@ -241,7 +211,7 @@
 				class="ui-header">
 				<h1>Select Groups</h1>
 
-				<a href="#home-page" data-role="button" data-icon="arrow-l"
+				<a href="#createpoll" data-role="button" data-icon="arrow-l"
 					data-inline="true">Back</a>
 			</div>
 			<div data-role="content">
@@ -268,7 +238,7 @@
 				data-position="fixed" data-theme="f" data-tap-toggle="false"
 				class="ui-header">
 				<h1>Select Friends</h1>
-				<a href="#home-page" data-role="button" data-icon="arrow-l"
+				<a href="#createpoll" data-role="button" data-icon="arrow-l"
 					data-inline="true">Back</a>
 			</div>
 			<div data-role="content">
@@ -302,7 +272,7 @@
 				data-position="fixed" data-theme="f" data-tap-toggle="false"
 				class="ui-header">
 				<h1>My Created Polls</h1>
-				<a href="#home-page" data-role="button" data-icon="arrow-l"
+				<a href="#polls-page" data-role="button" data-icon="arrow-l"
 					data-inline="true">Back</a>
 			</div>
 			<div data-role="content">
@@ -335,14 +305,34 @@
 				data-position="fixed" data-theme="f" data-tap-toggle="false"
 				class="ui-header">
 				<h1>My Poll Details</h1>
-				<a href="#home-page" data-role="button" data-icon="arrow-l"
-					data-inline="true">Back</a>
+				<a href="#showMyCreatedPollsPage" data-role="button"
+					data-icon="arrow-l" data-inline="true">Back</a>
 			</div>
 			<div data-role="content">
 				<div id="menu">
 					<input type="hidden" id="myCreatedPollHidden"
-						name="myCreatedPollDetails" value="" />
-					<p id="mYquestionP"></p>
+						name="myCreatedPollDetails" value="" /> <input type="hidden"
+						id="pollIdForCharts" name="myCreatedPollDetails" value="" />
+					<div>
+						<ul id="createdPollQuestionUl" data-role="listview">
+							<li data-role="divider" data-theme="b">Question:</li>
+							<li data-theme="c" id="questionCreatedLi"></li>
+						</ul>
+						<br /> <br /> <br />
+						<ul id="createdPollOptionsUl" data-role="listview">
+
+						</ul>
+						<br /> <br /> <br /> <br />
+
+						<ul id="createdPollForDetailsUl" data-role="listview">
+						</ul>
+						<br /> <br />
+					</div>
+					<a id="showChartDetails" data-theme="d" data-role="button" href="#showCharts"
+						 data-icon="flat-new" data-iconpos="right">Charts
+						and Graphs</a>
+					
+
 				</div>
 			</div>
 			<div id="footer" data-role="footer" data-id="footer1"
@@ -360,14 +350,46 @@
 			</div>
 
 		</div>
+		<div id="showCharts" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>My Charts</h1>
+				<a href="#showCreatedPollDetails" data-role="button"
+					data-icon="arrow-l" data-inline="true">Back</a>
+			</div>
+			<div data-role="content">
+				<ul data-role="listview" data-inset="true" style="min-width: 210px;"
+					data-theme="c">
+					<li data-role="divider" data-theme="b">Question</li>
+					<li id="questionChart"></li>
+				</ul>
+				<div id="populatePieCharts" style="height: 100%; width: 100%;"></div>
+				<div id="populateBarCharts" style="height: 100%; width: 100%;"></div>
 
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="" href="#second-page" data-icon="plus"
+							data-theme="d">Delete</a></li>
+						<li><a id="friends-button" href="#list-page"
+							data-icon="flat-menu" data-theme="f">Clear</a></li>
+						<li><a id="search-button" href="#search-page"
+							data-icon="search" data-theme="e">My Polls</a></li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
 		<!-- showMyAssignedPolls  -->
 		<div id="showPollsPage" data-role="page">
 			<div data-role="header" data-id="header" id="header"
 				data-position="fixed" data-theme="f" data-tap-toggle="false"
 				class="ui-header">
 				<h1>My Polls</h1>
-				<a href="#home-page" data-role="button" data-icon="arrow-l"
+				<a href="#polls-page" data-role="button" data-icon="arrow-l"
 					data-inline="true">Back</a>
 			</div>
 			<div data-role="content">
@@ -399,16 +421,32 @@
 			<div data-role="header" data-id="header" id="header"
 				data-position="fixed" data-theme="f" data-tap-toggle="false"
 				class="ui-header">
-				<h1>Poll</h1>
-				<a href="#home-page" data-role="button" data-icon="arrow-l"
+				<h1>Private Poll Details</h1>
+				<a href="#showPollsPage" data-role="button" data-icon="arrow-l"
 					data-inline="true">Back</a>
 			</div>
 			<div data-role="content">
-				<div id="menu">
-					<fieldset id="questionP" data-role="controlgroup"></fieldset>
-					<input type="hidden" id="privatePollHidden" name="groupdetails"
-						value="" />
+
+				<div>
+					<ul id="PrivatePollQuestionUl" data-role="listview">
+						<li data-role="divider" data-theme="b">Question:</li>
+						<li data-theme="c" id="questionPrivateLi"></li>
+					</ul>
+					<br /> <br /> <br />
+					<ul data-role="listview">
+						<li data-role="divider" data-theme="b">Options:</li>
+						<li><fieldset id="privateOptions" data-role="controlgroup"></fieldset>
+							<input type="hidden" id="privatePollHidden" name="groupdetails"
+							value="" /></li>
+					</ul>
+					<br /> <br />
+					<ul id="PrivatePollByDetailsUl" data-role="listview">
+						<li data-role="divider" data-theme="b">Poll By:</li>
+						<li id="PrivatePollByDetailsLi"></li>
+					</ul>
+					<br /> <br />
 				</div>
+
 			</div>
 			<div id="footer" data-role="footer" data-id="footer1"
 				data-position="fixed" data-tap-toggle="false">
@@ -432,7 +470,7 @@
 				data-position="fixed" data-theme="f" data-tap-toggle="false"
 				class="ui-header">
 				<h1>All Polls</h1>
-				<a href="#home-page" data-role="button" data-icon="arrow-l"
+				<a href="#polls-page" data-role="button" data-icon="arrow-l"
 					data-inline="true">Back</a>
 			</div>
 			<div data-role="content">
@@ -464,16 +502,34 @@
 			<div data-role="header" data-id="header" id="header"
 				data-position="fixed" data-theme="f" data-tap-toggle="false"
 				class="ui-header">
-				<h1>Poll</h1>
-				<a href="#home-page" data-role="button" data-icon="arrow-l"
+				<h1>Public Poll Details</h1>
+				<a href="#showAllPollsPage" data-role="button" data-icon="arrow-l"
 					data-inline="true">Back</a>
 			</div>
 			<div data-role="content">
-				<div id="menu">
-					<div id="questionPublic"></div>
-					<input type="hidden" id="publicPollHidden" name="groupdetails"
-						value="" />
+
+				<div>
+					<ul id="PublicPollQuestionUl" data-role="listview">
+						<li data-role="divider" data-theme="b">Question:</li>
+						<li data-theme="c" id="questionPublicLi"></li>
+					</ul>
+					<br /> <br /> <br />
+					<ul data-role="listview">
+						<li data-role="divider" data-theme="b">Options:</li>
+						<li><fieldset id="publicOptions" data-role="controlgroup"></fieldset>
+							<input type="hidden" id="publicPollHidden" name="groupdetails"
+							value="" /></li>
+					</ul>
+					<br /> <br />
+					<ul id="PublicPollByDetailsUl" data-role="listview">
+						<li data-role="divider" data-theme="b">Poll By:</li>
+						<li id="PublicPollByDetailsLi"></li>
+					</ul>
+					<br /> <br />
 				</div>
+
+
+
 			</div>
 			<div id="footer" data-role="footer" data-id="footer1"
 				data-position="fixed" data-tap-toggle="false">
@@ -493,10 +549,16 @@
 
 	</div>
 
-
-
+<script type="text/javascript" src="js/jqplot/jquery.jqplot.min.js"></script>
+<script type="text/javascript" src="js/jqplot/jqplot.barRenderer.min.js"></script>
+<script type="text/javascript"
+	src="js/jqplot/jqplot.categoryAxisRenderer.min.js"></script>
+<script type="text/javascript" src="js/jqplot/jqplot.pointLabels.min.js"></script>
+<script type="text/javascript" src="js/jqplot/jqplot.pieRenderer.min.js"></script>
+<script type="text/javascript"
+	src="js/jqplot/jqplot.donutRenderer.min.js"></script>
 
 	<script type="text/javascript" src="js/polls.js"></script>
-
+	<script type="text/javascript" src="js/charts.js"></script>
 </body>
 </html>
