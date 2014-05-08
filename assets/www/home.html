@@ -19,7 +19,7 @@
 	src="js/jQueryMobile/jquery.mobile-1.3.2.min.js"></script>
 
 
-	
+
 <script type="text/javascript" charset="utf-8" src="telephonenumber.js"></script>
 <script type="text/javascript"
 	src="http://dev.jtsage.com/cdn/datebox/latest/jqm-datebox.core.min.js"></script>
@@ -120,7 +120,7 @@
 			<div data-role="content">
 				<div data-role="fieldcontain">
 					<label for="question" style="font-weight: bold">Question:</label> <input
-						type="text" name="question" id="question" class="clearInput"/>
+						type="text" name="question" id="question" class="clearInput" />
 				</div>
 				<div>
 					<a id="addoption" data-role="button" data-icon="flat-plus"
@@ -133,21 +133,24 @@
 					<ul data-role="listview" data-inset="true" id="optionlistul">
 						<li id="listoption1" data-role="fieldcontain"><label
 							id="labeloption1" for="name" style="font-weight: bold">Option
-								1:</label> <input type="text" class="clearInput" name="option1" id="option1" /></li>
+								1:</label> <input type="text" class="clearInput" name="option1"
+							id="option1" /></li>
 						<li id="listoption2" data-role="fieldcontain"><label
 							id="labeloption2" for="name" style="font-weight: bold">Option
-								2:</label> <input type="text" class="clearInput" name="option2" id="option2" /></li>
+								2:</label> <input type="text" class="clearInput" name="option2"
+							id="option2" /></li>
 					</ul>
 				</div>
 				<div>
-					<label for="enddate">End Date</label> <input class="clearInput" name="mydate"
-						id="enddate" type="date" data-role="datebox" data-theme="f"
+					<label for="enddate">End Date</label> <input class="clearInput"
+						name="mydate" id="enddate" type="date" data-role="datebox"
+						data-theme="f"
 						data-options='{"mode": "datebox","themeButton": "f","themeInput":"f"}'>
 				</div>
 				<div>
 					<a data-theme="d" data-role="button" href="#imagePopup"
 						data-rel="popup" data-icon="flat-new" data-iconpos="right">Choose
-						a Media</a>
+						an Image</a>
 					<div data-role="popup" id="imagePopup" data-theme="b">
 						<ul data-role="listview" data-inset="true"
 							style="min-width: 210px;" data-theme="c">
@@ -328,10 +331,9 @@
 						</ul>
 						<br /> <br />
 					</div>
-					<a id="showChartDetails" data-theme="d" data-role="button" href="#showCharts"
-						 data-icon="flat-new" data-iconpos="right">Charts
-						and Graphs</a>
-					
+					<a id="showChartDetails" data-theme="d" data-role="button"
+						data-icon="flat-new" data-iconpos="right">Charts and Graphs</a>
+
 
 				</div>
 			</div>
@@ -366,6 +368,8 @@
 				</ul>
 				<div id="populatePieCharts" style="height: 100%; width: 100%;"></div>
 				<div id="populateBarCharts" style="height: 100%; width: 100%;"></div>
+				<div id="populateBubbleCharts" style="height: 100%; width: 100%;"></div>
+
 
 			</div>
 			<div id="footer" data-role="footer" data-id="footer1"
@@ -383,6 +387,37 @@
 			</div>
 
 		</div>
+
+		<div id="showEmptyCharts" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>My Charts</h1>
+				<a href="#showCreatedPollDetails" data-role="button"
+					data-icon="arrow-l" data-inline="true">Back</a>
+			</div>
+			<div data-role="content">
+
+
+				<div id="populateEmptyCharts">No charts to display</div>
+
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="" href="#second-page" data-icon="plus"
+							data-theme="d">Delete</a></li>
+						<li><a id="friends-button" href="#list-page"
+							data-icon="flat-menu" data-theme="f">Clear</a></li>
+						<li><a id="search-button" href="#search-page"
+							data-icon="search" data-theme="e">My Polls</a></li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+
 		<!-- showMyAssignedPolls  -->
 		<div id="showPollsPage" data-role="page">
 			<div data-role="header" data-id="header" id="header"
@@ -513,7 +548,24 @@
 						<li data-role="divider" data-theme="b">Question:</li>
 						<li data-theme="c" id="questionPublicLi"></li>
 					</ul>
-					<br /> <br /> <br />
+					<div id="spacesBeforeImg">
+						
+					</div>
+					<div align='center' id="ImagePoll">
+						<a href="#popupImage" data-rel="popup" data-position-to="window"
+							data-transition="fade"><img class="popImage" src=""
+							style="width: 30%;" id="smallImg" /></a>
+						<div data-role="popup" id="popupImage" data-overlay-theme="a"
+							data-theme="d" data-corners="false">
+							<a href="#" data-rel="back" data-role="button" data-theme="a"
+								data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img
+								class="popImage" id="largeImg" src="" style="max-height: 512px;">
+						</div>
+					</div>
+					<div id="spacesAfterImg">
+						
+					</div>
+					<br/><br/>
 					<ul data-role="listview">
 						<li data-role="divider" data-theme="b">Options:</li>
 						<li><fieldset id="publicOptions" data-role="controlgroup"></fieldset>
@@ -549,14 +601,16 @@
 
 	</div>
 
-<script type="text/javascript" src="js/jqplot/jquery.jqplot.min.js"></script>
+	<!-- <script type="text/javascript" src="js/jqplot/jquery.jqplot.min.js"></script>
 <script type="text/javascript" src="js/jqplot/jqplot.barRenderer.min.js"></script>
 <script type="text/javascript"
 	src="js/jqplot/jqplot.categoryAxisRenderer.min.js"></script>
 <script type="text/javascript" src="js/jqplot/jqplot.pointLabels.min.js"></script>
 <script type="text/javascript" src="js/jqplot/jqplot.pieRenderer.min.js"></script>
 <script type="text/javascript"
-	src="js/jqplot/jqplot.donutRenderer.min.js"></script>
+	src="js/jqplot/jqplot.donutRenderer.min.js"></script> -->
+	<script type="text/javascript" src="js/highcharts/highcharts.js"></script>
+	<script src="js/highcharts/highcharts-more.js"></script>
 
 	<script type="text/javascript" src="js/polls.js"></script>
 	<script type="text/javascript" src="js/charts.js"></script>

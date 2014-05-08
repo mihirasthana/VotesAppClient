@@ -1,7 +1,7 @@
 document.addEventListener("deviceready", onDeviceReady, false);
 var globalliveurl = "http://votesapp.elasticbeanstalk.com";
-//	constants
-	var phonenum="";
+//constants
+var phonenum="";
 var poll_question_key="\"poll_question\":";
 var poll_id_key = "\"poll_id\":"; 
 var poll_voter_option_key="\"poll_voter_option\":";
@@ -245,7 +245,7 @@ $('.submitPoll').click(function()
 			//alert("Poll Media Type:"+poll_media_type_key+($('#smallImage').attr("src"))+"msg:"+msg+" pollid:"+obj.PollId);
 			if((($('#smallImage').attr("src"))!= '') && ($('#smallImage').attr("src")) != null )
 			{
-			sendMediaToS3(1,($('#smallImage').attr("src")),obj.PollId);
+				sendMediaToS3(1,($('#smallImage').attr("src")),obj.PollId);
 			}
 			location.href="#home-page";
 		},
@@ -310,11 +310,39 @@ function getMyGroups(phonenum){
 	});
 }
 
+function getContactNames(callback,phonenum)
+{
+	var returnVal='';
+	function onSuccess(contacts) { 
+		alert("getContactNames success:"+phonenum+"<>"+contacts.length);
+		for (var i = 0; i < contacts.length ; i++) {
+			if(contacts[i].name != null && contacts[i].phoneNumbers != null) {
+				var name=contacts[i].name.formatted;
 
-/*$('#addoption').click(function()
-		{
-	showMyPolls(sessionStorage.phonenum);
-		});*/
+				var phone=(contacts[i].phoneNumbers[0].value).replace(/[^\w]/gi, '');
+				phone = phone.substr(-10);
+				//alert(phone+":"+phonenum);
+				if(phonenum == phone)
+				{
+					alert("phone present");
+					returnVal= name;
+					break;
+				}}
+		}
+		alert("calling callback");
+		callback(returnVal);
+	};
+	function onError(contactError) {
+		alert('onError!');
+	};
+
+	var options      = new ContactFindOptions();
+	options.filter	 = "";
+	options.multiple = true;
+	var fields       =  ["displayName", "name", "phoneNumbers"];
+	navigator.contacts.find(fields, onSuccess, onError, options);
+}
+
 function escapeCharsForOptions(jmsg)
 {
 	var pollOptions=new Array();
@@ -394,11 +422,20 @@ function tapHandler( event ){
 			var obj = jQuery.parseJSON( ''+ msg +'' );
 			$("#privatePollHidden").val(msg);
 			var html= "";
+			var imgSrc='';
 			if(!(isEmpty(obj)))
 			{
 				html= obj.This_Poll[0].poll_question;
 				alert(html);
 				$('#questionPrivateLi').html(html);
+/*				alert(obj.This_Poll[0].poll_media_link);
+				if(obj.This_Poll[0].poll_media_link !='' && obj.This_Poll[0].poll_media_link!=null)
+				{
+					html='<img src="'+obj.This_Poll[0].poll_media_link+'" style="max-height: 512px;">';
+					alert("Image Alert:"+html);
+					$('#imagePollDiv').html(html);
+				}*/
+				
 				html= obj.This_Poll[0].poll_creator;
 				alert(html);
 				$('#PrivatePollByDetailsLi').html(html);
@@ -412,7 +449,6 @@ function tapHandler( event ){
 
 			}
 			alert("html:"+html);
-			//$('#questionPublic').html(html );
 			$('#privateOptions').empty();
 			$(html).appendTo("#privateOptions");
 			location.href="#showPollDetails";
@@ -504,6 +540,15 @@ function tapPublicPollDetails( event ){
 				html= obj.This_Poll[0].poll_question;
 				alert(html);
 				$('#questionPublicLi').html(html);
+				if(obj.This_Poll[0].poll_media_link !='' && obj.This_Poll[0].poll_media_link!=null)
+				{
+					html='<br /> <br /> <br />';
+					$("#spacesBeforeImg").html(html);
+					alert("Image Alert"+obj.This_Poll[0].poll_media_link);
+					$('#smallImg').attr("src",obj.This_Poll[0].poll_media_link);
+					$('#largeImg').attr("src",obj.This_Poll[0].poll_media_link);
+					$("#spacesAfterImg").html(html);
+				}
 				html= obj.This_Poll[0].poll_creator;
 				alert(html);
 				$('#PublicPollByDetailsLi').html(html);
@@ -640,6 +685,32 @@ function showMyCreatedPolls(phonenum)
 
 }
 
+function escapeCharacters(str)
+{
+	//alert("Inside escapeChars");
+	var tempArr=[];
+	if(str == '' || str == null)
+	{
+		tempArr[0]="0";
+		//alert("empty");
+		return tempArr;
+	}
+	str = str.replace("]","");
+	str = str.replace("[","");
+	str = str.replace(/"/g, "");
+	str = str.replace(/\s/g, '');
+	//alert(str+str.length);
+	if(str == '' || str == null)
+	{
+		tempArr[0]="0";
+	}
+	else
+	{
+		tempArr = str.split(",");
+	}
+	return tempArr;
+}
+
 function tapCreatedPollDetails( event ){
 	alert("tapped");
 	var data=event.target.getAttribute("id");
@@ -653,7 +724,7 @@ function tapCreatedPollDetails( event ){
 		url: url,
 		data:data,
 		success: function(msg){
-			//alert("success");
+			alert(msg);
 			var obj = jQuery.parseJSON( ''+ msg +'' );
 			$("#myCreatedPollHidden").val(msg);
 			$('#pollIdForCharts').val(obj.This_Poll[0].poll_id);
@@ -678,22 +749,36 @@ function tapCreatedPollDetails( event ){
 
 				$(html).appendTo( "#createdPollOptionsUl" );
 				html="";
-				if(obj.This_Poll[0].poll_groupname.length!=0)
+				//alert(obj.This_Poll[0].poll_groupid+"<>"+obj.This_Poll[0].poll_participants);
+				var temp1= obj.This_Poll[0].poll_groupname;
+				var temp2=escapeCharacters(obj.This_Poll[0].poll_participants);
+
+
+				if(temp1[0]!='0' && temp1.length!=0)
 				{
 					html='<li data-role="divider" data-theme="e">Created For Groups:</li>';
-					for(var i=0;i<obj.This_Poll[0].poll_groupname.length;i++)
+
+					for(var i=0;i<temp1.length;i++)
 					{
-						html+='<li>'+obj.This_Poll[0].poll_groupname[i]+'</li>';
+						html+='<li>'+temp1[i]+'</li>';
 					}
+					temp1 = [];
 				}
 				//$("#createdPollDetailsUl").listview("refresh").trigger("create");
-				else if(obj.This_Poll[0].poll_groupname.length!=0)
+				else if(temp2[0]!='0' && temp2.length!=0)
 				{
 					html='<li data-role="divider" data-theme="e">Created For Friends:</li>';
-					for(var i=0;i<obj.This_Poll[0].poll_participants.length;i++)
+					for(var i=0;i<temp2.length;i++)
 					{
-						html+='<li>'+obj.This_Poll[0].poll_participants[i]+'</li>';
+						getContactNames(function(name){
+							alert(name);
+							html='<li>'+name+'</li>';
+							$(html).appendTo( "#createdPollForDetailsUl" );
+							$("#createdPollForDetailsUl").listview("refresh");
+						},temp2[i]);
+						
 					}
+					temp2 = [];
 				}
 				else
 				{
@@ -764,8 +849,8 @@ function onFail(message) {
 
 $('#CapturePhoto').click(function()
 		{
-	navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
-		destinationType: destinationType.DATA_URL });
+	captureImage();
+
 		});
 
 $('#ImageGallery').click(function()
@@ -797,9 +882,9 @@ function updateQueryStringParameter(uri, key, value) {
 }
 
 function sendMediaToS3(type,imageURI,pollid) {
-	var url = globalliveurl+"/api/votesapp/poll/media";
+	var url = globalliveurl+"/api/votesapp/poll/media?pollid="+pollid;
 	alert(url);
-	//alert("Image Uri:"+imageURI);
+	alert("Image Uri:"+imageURI);
 	var options = new FileUploadOptions();
 	options.fileKey="file";
 	options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
@@ -809,9 +894,9 @@ function sendMediaToS3(type,imageURI,pollid) {
 	}*/
 	options.chunkedMode = false;
 
-	var params = {};
+/*	var params = {};
 	params.PollId = pollid;
-	options.params = params;
+	options.params = params;*/
 
 	var ft = new FileTransfer();
 	ft.upload(imageURI, encodeURI(url), win, fail, options);
@@ -829,8 +914,31 @@ function fail(error) {
 	alert("upload error target " + error.target);
 }
 
-/*$(document).on('pagehide', '#createpoll', function(){ 
-	alert("sdfdsaf");
-	$('.clearInput').val("");
-	//$('#smallImage').attr("src",""); 
-});*/
+$(document).on('pagehide', '#showPublicPollDetailsPage', function(){ 
+	alert("onPageHide showPublicPollDetails");
+	$("#spacesBeforeImg").empty();
+	$("#spacesAfterImg").empty();
+	$('#smallImg').attr("src","");
+	$('#largeImg').attr("src",""); 
+});
+
+function captureSuccess(mediaFiles) {
+	var i, len;
+	for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+		//uploadFile(mediaFiles[i]);
+		$('#smallImage').attr("src",mediaFiles[i].fullPath);
+		$('#largeImage').attr("src",mediaFiles[i].fullPath);
+
+	}       
+}
+
+function captureError(error) {
+	var msg = 'An error occurred during capture: ' + error.code;
+	navigator.notification.alert(msg, null, 'Uh oh!');
+}
+
+function captureImage() {
+	navigator.device.capture.captureImage(captureSuccess, captureError, {limit: 1});
+}
+
+

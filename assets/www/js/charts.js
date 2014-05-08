@@ -1,109 +1,187 @@
 //var globalurl = "http://10.0.2.2:8080/VotesApp"
 var globalliveurl = "http://votesapp.elasticbeanstalk.com";	
-	$(document).ready(function(){
-		function isEmpty(obj) {
-			for(var prop in obj) {
-				if(obj.hasOwnProperty(prop))
-					return false;
-			}
-
-			return true;
+$(document).ready(function(){
+	function isEmpty(obj) {
+		for(var prop in obj) {
+			if(obj.hasOwnProperty(prop))
+				return false;
 		}
 
-		function escapeCharsForOptions(jmsg)
+		return true;
+	}
+
+	function escapeCharsForOptions(jmsg)
+	{
+		var pollOptions=new Array();
+		pollOptions = jmsg.split(",");
+		for(var i=0;i<pollOptions.length;i++)
 		{
-			var pollOptions=new Array();
-			pollOptions = jmsg.split(",");
-			for(var i=0;i<pollOptions.length;i++)
-			{
-				pollOptions[i] = pollOptions[i].replace('\\\"', "");
-				pollOptions[i] = pollOptions[i].replace("]","");
-				pollOptions[i] = pollOptions[i].replace("[","");
-				pollOptions[i] = pollOptions[i].replace(/"/g, "");
-			}
-
-			return pollOptions;
+			pollOptions[i] = pollOptions[i].replace('\\\"', "");
+			pollOptions[i] = pollOptions[i].replace("]","");
+			pollOptions[i] = pollOptions[i].replace("[","");
+			pollOptions[i] = pollOptions[i].replace(/"/g, "");
 		}
 
-		$("#showChartDetails").click(function(){
-			alert("chart displayed");
-			$("#populateBarCharts").html("");
-			$("#populatePieCharts").html("");
-			var pollID = $("#pollIdForCharts").val();
-			//alert(pollID);
-			var url=globalliveurl+"/api/votesapp/poll/voteResult/"+pollID;
-			$.ajax({
-				type: "GET",
-				async:false,
-				contentType: "application/json; charset=utf-8",
-				url: url,
-				success: function(msg){
-					var jmsg = JSON.parse('' + msg + '');
-					var pollOptions  = [];
-					var dataBar = [];
-					var dataPie = [];
-					alert(jmsg.poll_question);
-					//alert(jmsg.TotalOptions);
-					if(!(isEmpty(jmsg)) && jmsg.Msg != "no_votes")
-					{
-						pollOptions = escapeCharsForOptions(jmsg.poll_options);
-						for(var i=0;i<jmsg.TotalOptions;i++)
-						{
-							dataBar[i] = jmsg.OptionsVoteCount[i+1];
-							dataPie[i] = [pollOptions[i], jmsg.OptionsVoteCount[i+1]];
-							//data[i] = [pollOptions[i], jmsg.OptionsVoteCount[i+1]];
+		return pollOptions;
+	}
 
-						}
-						$("#questionChart").empty();
-						//$(""+jmsg.poll_question+"").appendTo('#questionChart');
-						var html = ""+jmsg.poll_question+"";
-						$('#questionChart').html(html);
-					
-						$("#showCharts").on("pageshow", function(event){
-							
-							
-							var plotBar = $.jqplot('populateBarCharts', [dataBar], {
-								seriesDefaults:{
-									renderer:$.jqplot.BarRenderer,
-									rendererOptions: {
-										// Set the varyBarColor option to true to use different colors for each bar.
-										// The default series colors are used.
-										varyBarColor: true
-									}
-								},
-								axes:{
-									xaxis:{
-										renderer: $.jqplot.CategoryAxisRenderer,
-										ticks: pollOptions
+	$("#showChartDetails").click(function(){
+		alert("chart displayed");
+		//$("#populateBarCharts").html("No Charts to Display.");
+		//$("#populatePieCharts").html("No Charts to Display.");
+		var pollID = $("#pollIdForCharts").val();
+		//alert(pollID);
+		var url=globalliveurl+"/api/votesapp/poll/voteResult/"+pollID;
+		$.ajax({
+			type: "GET",
+			async:false,
+			contentType: "application/json; charset=utf-8",
+			url: url,
+			success: function(msg){
+				var jmsg = JSON.parse('' + msg + '');
+				var pollOptions  = [];
+				var dataBar = [];
+				var dataPie = [];
+				var barData = '[';
+				/*{name: 'Yes',data: [49.9]}*/
+				alert(jmsg.poll_question);
+				//alert(jmsg.TotalOptions);
+				if(!(isEmpty(jmsg)) && jmsg.Msg != "no_votes")
+				{
+					alert("has polls");
+					pollOptions = escapeCharsForOptions(jmsg.poll_options);
+					for(var i=0;i<jmsg.TotalOptions;i++)
+					{
+						dataBar[i] = jmsg.OptionsVoteCount[i+1];
+						dataPie[i] = [pollOptions[i], jmsg.OptionsVoteCount[i+1]];
+						//data[i] = [pollOptions[i], jmsg.OptionsVoteCount[i+1]];
+						barData += "{name:'"+pollOptions[i].replace(/\s/g, '')+"',data:["+jmsg.OptionsVoteCount[i+1]+"]}";
+						if(i != (jmsg.TotalOptions-1))
+							barData +=',';
+						else
+							barData +=']';
+					}
+					alert("barData>>"+barData);
+
+					$("#questionChart").empty();
+					//$(""+jmsg.poll_question+"").appendTo('#questionChart');
+					var html = ""+jmsg.poll_question+"";
+					$('#questionChart').html(html);
+					$("#populateBarCharts").html("");
+					$("#populatePieCharts").html("");
+					$("#showCharts").on("pageshow", function(event){
+
+
+						$('#populateBarCharts').highcharts({
+							chart: {
+								type: 'column'
+							},
+							title: {
+								text: ''
+							},
+
+							xAxis: {
+								categories: [
+								             html
+								             ]
+							},
+							yAxis: {
+								min: 0,
+								title: {
+									text: 'Count'
+								}
+							},
+							/*tooltip: {
+					                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+					                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+					                footerFormat: '</table>',
+					                shared: true,
+					                useHTML: true
+					            },*/
+							plotOptions: {
+								column: {
+									pointPadding: 0.2,
+									borderWidth: 0
+								}
+							},
+							series: eval ("(" + barData + ")")/*[{
+								name: 'Yes',
+								data: [49.9]
+
+							}, {
+								name: 'No',
+								data: [83.6]
+
+							} ]*/
+						});
+
+
+						$('#populatePieCharts').highcharts({
+							chart: {
+								plotBackgroundColor: null,
+								plotBorderWidth: null,
+								plotShadow: false
+							},
+							title: {
+								text: ''
+							},
+
+							plotOptions: {
+								pie: {
+									allowPointSelect: true,
+									cursor: 'pointer',
+									dataLabels: {
+										enabled: true,
+										format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+										style: {
+											color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+										}
 									}
 								}
-							});
-							
-							var plotPie = jQuery.jqplot ('populatePieCharts', [dataPie],
-									{
-								seriesDefaults: {
-									// Make this a pie chart.
-									renderer: jQuery.jqplot.PieRenderer,
-									rendererOptions: {
-										// Put data labels on the pie slices.
-										// By default, labels show the percentage of the slice.
-										showDataLabels: true
-									}
-								},
-								legend: { show:true, location: 'e' }
-									}
-							);
+							},
+							series: [{
+								type: 'pie',
+								name: 'Vote share',
+								data: dataPie
+							}]
 						});
-					}
-				},
-				error: function () {
-					alert("error");
+
+						$('#populateBubbleCharts').highcharts({
+
+							chart: {
+								type: 'bubble',
+								zoomType: 'xy'
+							},
+
+							title: {
+								text: ''
+							},
+
+							series: [{name:"San Jose",
+								data: [[97,36,79]]
+							}, {name:"Santa Clara",
+								data: [[25,10,87]]
+							}, {name:"Fremont",
+								data: [[47,47,21]]
+							}]
+
+						});
+
+					});
+					location.href = "#showCharts";
+				} else {
+					location.href = "#showEmptyCharts";
 				}
-			});	
-		});
+			},
+			error: function () {
+				alert("error");
+			}
+		});	
+	});
 
 
-		/*$("#piechart").click(function(){
+	/*$("#piechart").click(function(){
 			alert("chart displayed");
 			$("#populateCharts").html("");
 			var pollID = $("#pollIdForCharts").val();
@@ -130,15 +208,15 @@ var globalliveurl = "http://votesapp.elasticbeanstalk.com";
 							data[i] = [pollOptions[i], jmsg.OptionsVoteCount[i+1]];
 
 						}
-						
+
 						$("#questionChart").empty();
 						//$(""+jmsg.poll_question+"").appendTo('#questionChart');
 						var html = ""+jmsg.poll_question+"";
 						$('#questionChart').html(html);
-						
+
 						$("#showCharts").on("pageshow", function(event){				
-							
-							
+
+
 							var plot1 = jQuery.jqplot ('populatePieCharts', [data],
 									{
 								seriesDefaults: {
@@ -162,10 +240,10 @@ var globalliveurl = "http://votesapp.elasticbeanstalk.com";
 				}
 			});	
 		});*/
-	});
+});
 
-	
-	
+
+
 /*$(document).ready(function(){
     var s1 = [200, 600, 700, 1000];
     var s2 = [460, -210, 690, 820];
