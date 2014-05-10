@@ -1,5 +1,6 @@
 document.addEventListener("deviceready", onDeviceReady, false);
 var globalliveurl = "http://votesapp.elasticbeanstalk.com";
+var globalliveurl = "http://10.0.2.2/votesapp";
 //constants
 var phonenum="";
 var poll_question_key="\"poll_question\":";
@@ -428,14 +429,16 @@ function tapHandler( event ){
 				html= obj.This_Poll[0].poll_question;
 				alert(html);
 				$('#questionPrivateLi').html(html);
-/*				alert(obj.This_Poll[0].poll_media_link);
 				if(obj.This_Poll[0].poll_media_link !='' && obj.This_Poll[0].poll_media_link!=null)
 				{
-					html='<img src="'+obj.This_Poll[0].poll_media_link+'" style="max-height: 512px;">';
-					alert("Image Alert:"+html);
-					$('#imagePollDiv').html(html);
-				}*/
-				
+					html='<br /> <br /> <br />';
+					$("#spacesBeforeImgPrivate").html(html);
+					alert("Image Alert"+obj.This_Poll[0].poll_media_link);
+					$('#smallPImg').attr("src",obj.This_Poll[0].poll_media_link);
+					$('#largePImg').attr("src",obj.This_Poll[0].poll_media_link);
+					$("#spacesAfterImgPrivate").html(html);
+				}
+
 				html= obj.This_Poll[0].poll_creator;
 				alert(html);
 				$('#PrivatePollByDetailsLi').html(html);
@@ -776,7 +779,7 @@ function tapCreatedPollDetails( event ){
 							$(html).appendTo( "#createdPollForDetailsUl" );
 							$("#createdPollForDetailsUl").listview("refresh");
 						},temp2[i]);
-						
+
 					}
 					temp2 = [];
 				}
@@ -817,7 +820,39 @@ $('#quickVote').click(function()
 
 		});
 
+/*$('#categories').click(function()
+		{
+	var url = globalliveurl +"/api/votesapp/poll/ByCategory/"+phonenum;
+	$.ajax({
+		type: "GET",
+		async:false,
+		url: url,
+		success: function(msg){
+			var obj = jQuery.parseJSON( ''+ msg +'' );
+			var tempArr = new Array();
+			var html1= '';
+			if(!(isEmpty(obj)))
+			{
+				for(var i=0;i<obj.My_Polls.length;i++) {
+					html1 += '<li class="createdpolldetailssclass" id= "' + obj.My_Polls[i].poll_id+'">'+obj.My_Polls[i].poll_question+'</li>';
+				}
+			}
+			else
+				html1 += '<li>You have Not Created Any Polls!!</li>';
+			$("#myCreatedList").empty();
+			$( html1 ).appendTo( "#myCreatedList" );
+			$( ".createdpolldetailssclass" ).bind( "tap", tapCreatedPollDetails );
 
+		},
+		complete: function() {
+			$("#myCreatedList").listview("refresh");
+		},
+		error: function () {
+			alert("Error");
+		}
+	});
+
+		});*/
 
 function onPhotoDataSuccess(imageData) {
 
@@ -894,7 +929,7 @@ function sendMediaToS3(type,imageURI,pollid) {
 	}*/
 	options.chunkedMode = false;
 
-/*	var params = {};
+	/*	var params = {};
 	params.PollId = pollid;
 	options.params = params;*/
 
@@ -920,6 +955,14 @@ $(document).on('pagehide', '#showPublicPollDetailsPage', function(){
 	$("#spacesAfterImg").empty();
 	$('#smallImg').attr("src","");
 	$('#largeImg').attr("src",""); 
+});
+
+$(document).on('pagehide', '#showPollDetails', function(){ 
+	alert("onPageHide showPublicPollDetails");
+	$("#spacesBeforeImgPrivate").empty();
+	$("#spacesAfterImgPrivate").empty();
+	$('#smallPImg').attr("src","");
+	$('#largePImg').attr("src",""); 
 });
 
 function captureSuccess(mediaFiles) {

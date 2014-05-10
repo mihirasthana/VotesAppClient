@@ -8,6 +8,7 @@
 <link type="text/css" href="css/jquery.jqplot.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="js/jQM-flat/jquery.mobile.flatui.css">
 <link rel="stylesheet" type="text/css" href="css/index.css" />
+<!-- <link rel="stylesheet" type="text/css" href="css/custom.css" /> -->
 <link type="text/css"
 	href="http://dev.jtsage.com/cdn/datebox/latest/jqm-datebox.min.css"
 	rel="stylesheet" />
@@ -51,8 +52,8 @@
 					data-icon="flat-eye" data-iconpos="right">Polls</a> <a
 					data-theme="g" href="#trending" data-role="button"
 					data-icon="flat-eye" data-iconpos="right">Trending</a> <a
-					data-theme="e" href="#categories" data-role="button"
-					data-icon="flat-cmd" data-iconpos="right">Categories</a> <a
+					data-theme="e" href="#CategoriesPage" data-role="button"
+					data-icon="flat-cmd" data-iconpos="right" id="categoriesBtn">Categories</a> <a
 					data-theme="a" href="#mystats" data-role="button"
 					data-icon="flat-menu" data-iconpos="right">My Stats</a>
 
@@ -467,7 +468,21 @@
 						<li data-role="divider" data-theme="b">Question:</li>
 						<li data-theme="c" id="questionPrivateLi"></li>
 					</ul>
-					<br /> <br /> <br />
+					<div id="spacesBeforeImgPrivate"></div>
+					<div align='center' id="ImagePoll">
+						<a href="#popupPrivateImage" data-rel="popup"
+							data-position-to="window" data-transition="flip"><img
+							class="popImage" src="" style="width: 30%;" id="smallPImg" /></a>
+						<div data-role="popup" id="popupPrivateImage"
+							data-overlay-theme="a" data-theme="d" data-corners="false">
+							<a href="#" data-rel="back" data-role="button" data-theme="a"
+								data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img
+								class="popImage" id="largePImg" src=""
+								style="max-height: 512px;">
+						</div>
+					</div>
+					<div id="spacesAfterPrivateImg"></div>
+					<br /> <br />
 					<ul data-role="listview">
 						<li data-role="divider" data-theme="b">Options:</li>
 						<li><fieldset id="privateOptions" data-role="controlgroup"></fieldset>
@@ -548,12 +563,10 @@
 						<li data-role="divider" data-theme="b">Question:</li>
 						<li data-theme="c" id="questionPublicLi"></li>
 					</ul>
-					<div id="spacesBeforeImg">
-						
-					</div>
+					<div id="spacesBeforeImg"></div>
 					<div align='center' id="ImagePoll">
 						<a href="#popupImage" data-rel="popup" data-position-to="window"
-							data-transition="fade"><img class="popImage" src=""
+							data-transition="flip"><img class="popImage" src=""
 							style="width: 30%;" id="smallImg" /></a>
 						<div data-role="popup" id="popupImage" data-overlay-theme="a"
 							data-theme="d" data-corners="false">
@@ -562,10 +575,8 @@
 								class="popImage" id="largeImg" src="" style="max-height: 512px;">
 						</div>
 					</div>
-					<div id="spacesAfterImg">
-						
-					</div>
-					<br/><br/>
+					<div id="spacesAfterImg"></div>
+					<br /> <br />
 					<ul data-role="listview">
 						<li data-role="divider" data-theme="b">Options:</li>
 						<li><fieldset id="publicOptions" data-role="controlgroup"></fieldset>
@@ -589,6 +600,37 @@
 					<ul>
 						<li><a id="votePublic" href="#" data-icon="plus"
 							data-theme="d">Vote</a></li>
+						<li><a id="friends-button" href="#list-page"
+							data-icon="flat-menu" data-theme="f">Clear</a></li>
+						<li><a id="search-button" href="#search-page"
+							data-icon="search" data-theme="e">My Polls</a></li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+
+		<div id="CategoriesPage" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>Categories</h1>
+				<a href="#home-page" data-role="button"
+					data-icon="arrow-l" data-inline="true">Back</a>
+			</div>
+			<div data-role="content">
+				<ul data-role="listview" data-inset="true" style="min-width: 210px;"
+					data-theme="c">
+					<li data-role="divider" data-theme="b">Categories</li>
+				</ul>
+
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="" href="#second-page" data-icon="plus"
+							data-theme="d">Delete</a></li>
 						<li><a id="friends-button" href="#list-page"
 							data-icon="flat-menu" data-theme="f">Clear</a></li>
 						<li><a id="search-button" href="#search-page"
