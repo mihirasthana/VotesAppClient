@@ -1,6 +1,6 @@
 document.addEventListener("deviceready", onDeviceReady, false);
 var globalliveurl = "http://votesapp.elasticbeanstalk.com";
-var globalliveurl = "http://10.0.2.2/votesapp";
+//var globalliveurl = "http://10.0.2.2/votesapp";
 //constants
 var phonenum="";
 var poll_question_key="\"poll_question\":";
@@ -36,7 +36,7 @@ function onDeviceReady()
 	pictureSource=navigator.camera.PictureSourceType;
 	destinationType=navigator.camera.DestinationType;
 
-	document.addEventListener("backbutton", onBackButtonDown, false);
+	//document.addEventListener("backbutton", onBackButtonDown, false);
 }
 
 function onBackButtonDown() {
@@ -376,7 +376,7 @@ function showMyPolls(phonenum)
 			if(!(isEmpty(obj)))
 			{
 				for(var i=0;i<obj.My_Polls.length;i++) {
-					html1 += '<li class="polldetailssclass" id= "' + obj.My_Polls[i].poll_id+'">'+obj.My_Polls[i].poll_question+'</li>';
+					html1 += '<li class="polldetailssclass"><a id= "' + obj.My_Polls[i].poll_id+'" href="#showPollDetails">'+obj.My_Polls[i].poll_question+'</a></li>';
 				}
 			}
 			//'<input type="radio" name="choice" id="choice" value="'+My_Polls[i].poll_options[j]+'"><label for="choice">'+obj.My_Polls[i].poll_options[j]+'</label>'
@@ -415,7 +415,6 @@ function tapHandler( event ){
 	//var url="http://10.0.2.2:8080/VotesApp/api/votesapp/poll/ById/"+data;
 	var temp_mem_name="";
 	$.ajax({
-		async:false,
 		type: "GET",
 		url: url,
 		data:data,
@@ -446,7 +445,7 @@ function tapHandler( event ){
 				tempArr = escapeCharsForOptions(obj.This_Poll[0].poll_options);
 				for(var j=0;j<tempArr.length;j++)
 				{
-					html+= '<input type="radio" name="choice2" value="'+(j+1)+'" id="radio-choice-v-6' + j +'" checked="checked"><label for="radio-choice-v-6' + j +'">'+ tempArr[j] +'</label>';
+					html+= '<input type="radio" name="choice2" class="pollOptionsPrivateClass" value="'+(j+1)+'" id="radio-choice-v-6' + j +'" checked="checked"><label for="radio-choice-v-6' + j +'">'+ tempArr[j] +'</label>';
 				}
 				tempArr = [];
 
@@ -456,6 +455,12 @@ function tapHandler( event ){
 			$(html).appendTo("#privateOptions");
 			location.href="#showPollDetails";
 		},
+		complete: function() {
+	           
+            $(".pollOptionsPrivateClass").checkboxradio();
+            $(".pollOptionsPrivateClass").checkboxradio("refresh").trigger("create");
+          
+        },
 		error: function () {
 			alert("Error");
 		}
@@ -482,7 +487,7 @@ function showAllPolls(phonenum)
 			if(!(isEmpty(obj)))
 			{
 				for(var i=0;i<obj.All_Polls.length;i++) {
-					html1 += '<li class="publicpolldetailssclass" id= "' + obj.All_Polls[i]._id.$oid+'">'+obj.All_Polls[i].poll_question+'</li>';
+					html1 += '<li class="publicpolldetailssclass"><a id= "' + obj.All_Polls[i]._id.$oid+'" href="#showPublicPollDetailsPage">'+obj.All_Polls[i].poll_question+'</a></li>';
 				}
 			}
 
@@ -518,8 +523,7 @@ function tapPublicPollDetails( event ){
 	var url = globalliveurl +"/api/votesapp/poll/ById/"+data;
 	//var url="http://10.0.2.2:8080/VotesApp/api/votesapp/poll/ById/"+data;
 	var temp_mem_name="";
-	$.ajax({
-		async:false,
+	$.ajax({	
 		type: "GET",
 		url: url,
 		data:data,
@@ -541,7 +545,7 @@ function tapPublicPollDetails( event ){
 			     </fieldset>
 				 */
 				html= obj.This_Poll[0].poll_question;
-				alert(html);
+				//alert(html);
 				$('#questionPublicLi').html(html);
 				if(obj.This_Poll[0].poll_media_link !='' && obj.This_Poll[0].poll_media_link!=null)
 				{
@@ -553,23 +557,29 @@ function tapPublicPollDetails( event ){
 					$("#spacesAfterImg").html(html);
 				}
 				html= obj.This_Poll[0].poll_creator;
-				alert(html);
+				//alert(html);
 				$('#PublicPollByDetailsLi').html(html);
 				html='';
 				tempArr = escapeCharsForOptions(obj.This_Poll[0].poll_options);
 				for(var j=0;j<tempArr.length;j++)
 				{
-					html+= '<input type="radio" name="choice1" value="'+(j+1)+'" id="radio-choice-v-6' + j +'" checked="checked"><label for="radio-choice-v-6' + j +'">'+ tempArr[j] +'</label>';
+					html+= '<input type="radio" name="choice1" class="pollOptionsClass" value="'+(j+1)+'" id="radio-choice-v-6' + j +'" checked="checked"><label for="radio-choice-v-6' + j +'">'+ tempArr[j] +'</label>';
 				}
 				tempArr = [];
 
 			}
-			alert("html:"+html);
+			//alert("html:"+html);
 			//$('#questionPublic').html(html );
 			$('#publicOptions').empty();
 			$(html).appendTo("#publicOptions");
 			location.href="#showPublicPollDetailsPage";
 		},
+		complete: function() {
+	           
+            $(".pollOptionsClass").checkboxradio();
+            $(".pollOptionsClass").checkboxradio("refresh").trigger("create");
+          
+        },
 		error: function () {
 			alert("Error");
 		}
@@ -668,7 +678,7 @@ function showMyCreatedPolls(phonenum)
 			if(!(isEmpty(obj)))
 			{
 				for(var i=0;i<obj.My_Polls.length;i++) {
-					html1 += '<li class="createdpolldetailssclass" id= "' + obj.My_Polls[i].poll_id+'">'+obj.My_Polls[i].poll_question+'</li>';
+					html1 += '<li class="createdpolldetailssclass" ><a id= "' + obj.My_Polls[i].poll_id+'" href="#showCreatedPollDetails">'+obj.My_Polls[i].poll_question+'</a></li>';
 				}
 			}
 			else

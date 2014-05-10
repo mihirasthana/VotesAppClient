@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="format-detection" content="telephone=no" />
+<meta name="viewport"
+	content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, target-densitydpi=medium-dpi" />
+<link type="text/css" href="css/jquery.jqplot.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="js/jQM-flat/jquery.mobile.flatui.css">
+<link rel="stylesheet" type="text/css" href="css/index.css" />
+<link type="text/css"
+	href="http://dev.jtsage.com/cdn/datebox/latest/jqm-datebox.min.css"
+	rel="stylesheet" />
+<!-- <script type="text/javascript" src="js/fastclick.min.js"></script> -->
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/jquery-2.0.3.min.js"></script>
+
+<script type="text/javascript"
+	src="js/jQueryMobile/jquery.mobile-1.3.2.min.js"></script>
+
+
+
+<script type="text/javascript" charset="utf-8" src="telephonenumber.js"></script>
+
+<title>VotesApp</title>
+</head>
+<body>
+	<div id="app">
+		<div id="iShadowHomePage" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>I Shadow</h1>
+			</div>
+			<div data-role="content">
+				<ul data-role="listview" data-inset="true" id="shadowIShadowList">
+					<li><a href="#showPollsPopup" data-rel="popup"> <img
+							src="https://s3-us-west-2.amazonaws.com/enterprisevotesappbucket/spartans.JPG">
+							<h2>SJSU</h2>
+							<p>San Jose State University</p></a>
+				</ul>
+
+
+
+				<div data-role="popup" id="showPollsPopup" data-theme="d">
+					<ul data-role="listview" data-inset="true"
+						style="min-width: 210px;" data-theme="c">
+						<li><a href="#iShadowVotedPage" id="">View Voted Polls</a></li>
+						<li><a href="#iShadowVotePage" id="">Vote Polls</a></li>
+					</ul>
+				</div>
+
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="action" href="#" data-icon="star" data-theme="d">Shadow</a></li>
+
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div id="iShadowVotedPage" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>Voted Polls</h1>
+			</div>
+			<div data-role="content">
+				<ul data-role="listview" data-inset="true" data-theme="e">
+					<li><img
+						src="https://s3-us-west-2.amazonaws.com/enterprisevotesappbucket/spartans.JPG">
+						<h2>SJSU</h2>
+						<p>San Jose State University</p></li>
+				</ul>
+
+				<ul id="populateShadowVotedList" data-role="listview">
+				</ul>
+
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="shadow" href="#" data-icon="star" data-theme="d">Shadow</a></li>
+
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div id="iShadowVotePage" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>Vote</h1>
+			</div>
+			<div data-role="content">
+				<ul data-role="listview" data-inset="true" data-theme="e">
+					<li><img
+						src="https://s3-us-west-2.amazonaws.com/enterprisevotesappbucket/spartans.JPG">
+						<h2>SJSU</h2>
+						<p>San Jose State University</p></li>
+				</ul>
+				<ul id="populateShadowVoteList" data-role="listview">
+				</ul>
+
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="shadow" href="#" data-icon="star" data-theme="d">Shadow</a></li>
+
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div id="iShadowVotedDetailsPage" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>Vote</h1>
+			</div>
+			<div data-role="content">
+				<div>
+					<ul id="ShadowPollQuestionUl" data-role="listview">
+						<li data-role="divider" data-theme="b">Question:</li>
+						<li data-theme="c" id="questionShadowLi"></li>
+					</ul>
+					<div id="spacesBeforeImgShadow"></div>
+					<div align='center' id="ImagePoll">
+						<a href="#popupShadowImage" data-rel="popup"
+							data-position-to="window" data-transition="flip"><img
+							class="popImage" src="" style="width: 30%;" id="smallPImg" /></a>
+						<div data-role="popup" id="popupShadowImage"
+							data-overlay-theme="a" data-theme="d" data-corners="false">
+							<a href="#" data-rel="back" data-role="button" data-theme="a"
+								data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img
+								class="popImage" id="largePImg" src=""
+								style="max-height: 512px;">
+						</div>
+					</div>
+					<div id="spacesAfterShadowImg"></div>
+					<br /> <br />
+					<ul data-role="listview">
+						<li data-role="divider" data-theme="b">Options:</li>
+						<li><fieldset id="ShadowOptions" data-role="controlgroup"></fieldset>
+							<input type="hidden" id="ShadowPollHidden" name="groupdetails"
+							value="" /></li>
+					</ul>
+					<br /> <br />
+					<ul id="ShadowPollByDetailsUl" data-role="listview">
+						<li data-role="divider" data-theme="b">Poll By:</li>
+						<li id="ShadowPollByDetailsLi"></li>
+					</ul>
+					<br /> <br />
+				</div>
+
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="shadow" href="#" data-icon="star" data-theme="d">Shadow</a></li>
+
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div id="iShadowVoteDetailsPage" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>Vote</h1>
+			</div>
+			<div data-role="content">
+
+				<div id="menu">
+					<input type="hidden" id="shadowPollDetailsHidden"
+						name="myCreatedPollDetails" value="" /> <input type="hidden"
+						id="pollIdForCharts" name="shadowPollIdHidden" value="" />
+					<div>
+						<ul id="iShadowVoteDetail" data-role="listview">
+							<li data-role="divider" data-theme="b">Question:</li>
+							<li data-theme="c" id="questionShadowVoteLi"></li>
+						</ul>
+						<br /> <br /> <br />
+						<ul id="shadowVoteOptionsUl" data-role="listview">
+
+						</ul>
+						<br /> <br /> <br /> <br />
+
+						<ul id="shadowPollForDetailsUl" data-role="listview">
+						</ul>
+						<br /> <br />
+					</div>
+					<a id="showChartDetails" data-theme="d" data-role="button"
+						data-icon="flat-new" data-iconpos="right">Charts and Graphs</a>
+				</div>
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="shadow" href="#" data-icon="star" data-theme="d">Shadow</a></li>
+
+					</ul>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<script type="text/javascript" src="js/highcharts/highcharts.js"></script>
+	<script src="js/highcharts/highcharts-more.js"></script>
+
+	<!-- <script type="text/javascript" src="js/polls.js"></script> -->
+	<script type="text/javascript" src="js/charts.js"></script>
+</body>
+</html>

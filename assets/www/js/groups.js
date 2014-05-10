@@ -8,13 +8,13 @@ $(function(){
 	var member_key="\"members\":";
 	var creategroup_key="group=";
 	var member_name="";
-	
+	var globalContacts = null;
 	//alert("In OnDeviceReady");
 	sessionStorage.phonenum=getMyPhoneNumber();
 	//alert(sessionStorage.phonenum);
 	getMyGroups(sessionStorage.phonenum);
 	//alert("In OnDeviceReady"+phonenum);
-	//getContactList();
+	getContactList();
 
 	document.addEventListener("backbutton", onBackButtonDown, false);
 
@@ -34,6 +34,8 @@ $(function(){
 		function onSuccess(contacts) {
 			//alert(contacts);
 			contacts.sort(sortByContactName);
+			globalContacts = contacts;
+			//alert(globalContacts);
 			var html="";
 			for (var i = 0; i < contacts.length ; i++) {
 				if(contacts[i].name != null && contacts[i].phoneNumbers != null) {
@@ -87,7 +89,7 @@ $(function(){
 	$("#create-group").click(function() {
 		
 		$("#groupname").val("");
-		getContactList();
+		//getContactList();
 		
 	});
 	
@@ -164,7 +166,7 @@ $(function(){
 				if(!(isEmpty(obj)))
 				{
 					for(var i=0;i<obj.groups.length;i++) {
-						html += '<li class="groupListItem" id= "' + obj.groups[i]._id.$oid +'">'+obj.groups[i].name+'</li>';
+						html += '<li class="groupListItem" id= ><a id="' + obj.groups[i]._id.$oid +'" href ="#group-details">'+obj.groups[i].name+'</a></li>';
 					}
 					
 				}
@@ -250,7 +252,12 @@ $(function(){
 					for(k=0;k<obj.members.length;k++){
 						/*temp_mem_name=(getMemberName(obj.members[k]));
 						alert("temp_mem"+temp_mem_name);*/
-						html += '<li>'+obj.members[k]+'</li>';
+						var name = getContactNames(obj.members[k]);
+						//alert(name);
+							html = '<li>'+name+'</li>';
+							$(html).appendTo( "#groupmembers" );
+							//$("#groupmembers").listview("refresh");
+						
 						temp_mem_name="";
 						
 					}
@@ -280,7 +287,60 @@ $(function(){
 	$("#clearcontacts").click(function() {
 		$('.checkcontacts').filter(':checkbox').prop('checked',false).checkboxradio("refresh");
 	});
-	
+
+	function getContactNames(phonenum)
+	{
+		var returnVal='';
+		var contacts = globalContacts;
+		//alert("getContactNames success:"+phonenum+"<>"+contacts.length);
+		for (var i = 0; i < contacts.length ; i++) {
+			if(contacts[i].name != null && contacts[i].phoneNumbers != null) {
+				var name=contacts[i].name.formatted;
+
+				var phone=(contacts[i].phoneNumbers[0].value).replace(/[^\w]/gi, '');
+				phone = phone.substr(-10);
+				//alert(phone+":"+phonenum);
+				if(phonenum == phone)
+				{
+					//alert("phone present");
+					returnVal= name;
+					break;
+				}}
+		}
+		//alert("calling callback");
+		return returnVal;
+		
+		/*function onSuccess(contacts) { 
+			alert("getContactNames success:"+phonenum+"<>"+contacts.length);
+			for (var i = 0; i < contacts.length ; i++) {
+				if(contacts[i].name != null && contacts[i].phoneNumbers != null) {
+					var name=contacts[i].name.formatted;
+
+					var phone=(contacts[i].phoneNumbers[0].value).replace(/[^\w]/gi, '');
+					phone = phone.substr(-10);
+					//alert(phone+":"+phonenum);
+					if(phonenum == phone)
+					{
+						alert("phone present");
+						returnVal= name;
+						break;
+					}}
+			}
+			alert("calling callback");
+			callback(returnVal);
+		};
+		function onError(contactError) {
+			alert('onError!');
+		};
+
+		var options      = new ContactFindOptions();
+		options.filter	 = "";
+		options.multiple = true;
+		var fields       =  ["displayName", "name", "phoneNumbers"];
+		navigator.contacts.find(fields, onSuccess, onError, options);*/
+		
+		
+	}
 
 });
 
