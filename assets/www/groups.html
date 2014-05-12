@@ -27,8 +27,8 @@
 				data-position="fixed" data-theme="f" data-tap-toggle="false"
 				class="ui-header">
 				<h1>Groups</h1>
-				<a href="#" data-role="button" data-icon="arrow-l"
-					data-inline="true" onclick="window.location='./home.html'">Back</a>
+				<!-- <a href="#" data-role="button" data-icon="arrow-l"
+					data-inline="true" onclick="window.location='./home.html'">Back</a> -->
 			</div>
 
 			<div data-role="content">
@@ -48,10 +48,12 @@
 				data-position="fixed" data-tap-toggle="false">
 				<div id="navbar" data-role="navbar">
 					<ul>
+						<li><a id="" href="#" data-icon="arrow-l"
+							data-theme="e" onclick="window.location='./home.html'">Back</a></li>
+						<li><a id="" href="#" data-icon="home"
+							data-theme="f" onclick="window.location='./home.html'">Home</a></li>
 						<li><a id="create-group" href="#create-group-page"
 							data-icon="plus" data-theme="d">Create Group</a></li>
-						<li><a id="search-button" href="#search-page"
-							data-icon="search" data-theme="e">Search</a></li>
 					</ul>
 				</div>
 			</div>
@@ -62,14 +64,14 @@
 				data-position="fixed" data-theme="f" data-tap-toggle="false"
 				class="ui-header">
 				<h1>Group Details</h1>
-				<a href="#home-page" data-role="button" data-icon="arrow-l"
-					data-inline="true">Back</a>
+				<!-- <a href="#home-page" data-role="button" data-icon="arrow-l"
+					data-inline="true">Back</a> -->
 			</div>
 			<div data-role="content">
 				<div id="groupinfo">
 					<input type="hidden" id="groupid" name="groupdetails" value="" />
 					<ul id="groupmembers" data-role="listview">
-
+					
 					</ul>
 				</div>
 			</div>
@@ -77,10 +79,12 @@
 				data-position="fixed" data-tap-toggle="false">
 				<div id="navbar" data-role="navbar">
 					<ul>
+						<li><a id="" href="#home-page" data-icon="arrow-l"
+							data-theme="e" >Back</a></li>
+						<li><a id="" href="#" data-icon="home"
+							data-theme="f" onclick="window.location='./home.html'">Home</a></li>
 						<li><a id="delete-groups" href="#home-page"
 							data-icon="delete" data-theme="d">Delete Group</a></li>
-						<li><a id="edit-groups" href="#edit-groups" data-icon="gear"
-							data-theme="e">Edit Group</a></li>
 					</ul>
 				</div>
 			</div>
@@ -93,8 +97,8 @@
 				class="ui-header">
 				<h1>Create Group</h1>
 
-				<a href="#home-page" data-role="button" data-icon="arrow-l"
-					data-inline="true">Back</a>
+				<!-- <a href="#home-page" data-role="button" data-icon="arrow-l"
+					data-inline="true">Back</a> -->
 			</div>
 			<div data-role="content">
 				<div id="contactinfo">
@@ -114,12 +118,16 @@
 				data-position="fixed" data-tap-toggle="false">
 				<div id="navbar" data-role="navbar">
 					<ul>
-						<li><a id="creategroup" href="#home-page" data-icon="plus"
+						<li><a id="" href="#home-page" data-icon="arrow-l"
+							data-theme="e" >Back</a></li>
+						<li><a id="" href="#" data-icon="home"
+							data-theme="f" onclick="window.location='./home.html'">Home</a></li>
+						<li><a id="creategroup" href="#" data-icon="plus"
 							data-theme="d">Add to Group</a></li>
-						<li><a id="clearcontacts" href="#list-page" data-icon="delete"
+						<!-- <li><a id="clearcontacts" href="#list-page" data-icon="delete"
 							data-icon="flat-menu" data-theme="f">Clear</a></li>
 						<li><a id="search-button" href="#search-page"
-							data-icon="search" data-theme="e">Search</a></li>
+							data-icon="search" data-theme="e">Search</a></li> -->
 					</ul>
 				</div>
 			</div>

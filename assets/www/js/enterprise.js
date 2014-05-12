@@ -11,16 +11,16 @@ function isEmpty(obj) {
 
 $('.category').click(function()
 		{
-	alert("Category clicked:"+sessionStorage.phonenum+"<>"+($(this).attr('id')));
+	//alert("Category clicked:"+sessionStorage.phonenum+"<>"+($(this).attr('id')));
 	var url = globalliveurl +"/api/EnterpriseVotesapp/enterprise_list/"+sessionStorage.phonenum+"/"+($(this).attr('id'));
-	alert("Url:"+url);
+	//alert("Url:"+url);
 	$.ajax({
 		type: "GET",
 		url: url,
 		async:false,
 		success: function(msg){
 			var obj = jQuery.parseJSON( ''+ msg +'' );
-			alert(msg);
+			//alert(msg);
 			var html= "";
 			if(!(isEmpty(obj)))
 			{
@@ -41,9 +41,10 @@ $('.category').click(function()
 			{
 				html += '<li>No Sub-Categories Found</li>'; 
 			}
-			alert("html:"+html);
+			//alert("html:"+html);
 			$( "#shadowList" ).empty();
 			$( html ).appendTo( "#shadowList" );
+			$('#shadowName').html(obj.enterprise_details[0].enterprise_category);
 			$( ".shadowDetailsClass" ).bind( "click", clickHandler );
 
 		},
@@ -58,16 +59,16 @@ $('.category').click(function()
 
 function clickHandler(event)
 {
-	alert("Clickededddd");
+	//alert("Clickededddd");
 	var oid = ($(this).attr('id'));
-	alert("Show Details:"+oid);
+	//alert("Show Details:"+oid);
 	var html='';
-	alert("Name:"+($('#'+oid+'_name').html())+" Details:"+($('#'+oid+'_details').val())+" JoinDate:"+($('#'+oid+'_joinDate').val())+" Category:"+($('#'+oid+'_category').val()));
+	//alert("Name:"+($('#'+oid+'_name').html())+" Details:"+($('#'+oid+'_details').val())+" JoinDate:"+($('#'+oid+'_joinDate').val())+" Category:"+($('#'+oid+'_category').val()));
 	$('#getEntName').val(($('#'+oid+'_name').html()));
 	$('#getCategory').val(($('#'+oid+'_category').val()));
 	html = '<li><img src="'+($('#'+oid+'_img').attr('src'))+
 	'"><h2>'+($('#'+oid+'_name').html())+'</h2><p>Category:'+($('#'+oid+'_category').val())+'<br/>Joining Date:'+($('#'+oid+'_joinDate').val())+'</p></li>';
-	alert(html);
+	//alert(html);
 	$( "#shadowDetailsName" ).html(($('#'+oid+'_name').html()));
 	$( "#shadowDetailsList" ).empty();
 	$( html ).appendTo( "#shadowDetailsList" );
@@ -80,18 +81,18 @@ function clickHandler(event)
 }
 
 $('#shadow').click(function(){
-	alert("Shadow Clicked");
+	//alert("Shadow Clicked");
 	var url= globalliveurl+"/api/EnterpriseVotesapp/follow";
 	var data = '{"enterprise_name":"'+($("#getEntName").val())+'","enterprise_category":"'+($('#getCategory').val())+
 	'","follower":"'+sessionStorage.phonenum+'"}';
-	alert("data:"+data);
+	//alert("data:"+data);
 	$.ajax({
 		type: "POST",
 		url: url,
 		data: data,
 		success: function(msg){
-			alert(msg);
-			alert("Follow Success");
+			//alert(msg);
+			//alert("Follow Success");
 			$('.category').trigger('click');
 			location.href="#shadowListingPage";
 			

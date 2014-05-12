@@ -33,7 +33,8 @@
 				<h1>I Shadow</h1>
 			</div>
 			<div data-role="content">
-				<ul data-role="listview" data-inset="true" id="shadowIShadowList">
+				<ul data-role="listview" data-autodividers="true" data-inset="true"
+					id="shadowIShadowList" data-filter="true">
 				</ul>
 
 
@@ -42,8 +43,9 @@
 					<input type="hidden" id="shadowEntNm" />
 					<ul data-role="listview" data-inset="true"
 						style="min-width: 210px;" data-theme="c">
-						<li><a href="#iShadowVotedPage" id="shadowingVoted">View Voted Polls</a></li>
-						<li><a href="#iShadowVotePage" id="shadowingVote">Vote Polls</a></li>
+						<li><a href="#iShadowVotedPage" id="shadowingVoted">Already
+								Voted</a></li>
+						<li><a href="#iShadowVotePage" id="shadowingVote">Vote</a></li>
 					</ul>
 				</div>
 
@@ -52,7 +54,14 @@
 				data-position="fixed" data-tap-toggle="false">
 				<div id="navbar" data-role="navbar">
 					<ul>
-						<li><a id="action" href="#" data-icon="star" data-theme="d">Shadow</a></li>
+						<li><a id="action" href="#"
+							onclick="window.location='./home.html'" data-icon="arrow-l"
+							data-theme="e">Back</a></li>
+						<li><a id="action" href="#" data-icon="home"
+							onclick="window.location='./home.html'" data-theme="f">Home</a></li>
+						<li><a id="action" href="#"
+							onclick="window.location='./enterprise.html'" data-icon="star"
+							data-theme="d">Shadow</a></li>
 
 					</ul>
 				</div>
@@ -66,8 +75,9 @@
 				<h1>Voted Polls</h1>
 			</div>
 			<div data-role="content">
-				<ul data-role="listview" data-inset="true" data-theme="e" id="iShadowVotedEntDetails">
-		
+				<ul data-role="listview" data-inset="true" data-theme="e"
+					id="iShadowVotedEntDetails">
+
 				</ul>
 
 				<ul id="populateShadowVotedList" data-role="listview">
@@ -78,7 +88,12 @@
 				data-position="fixed" data-tap-toggle="false">
 				<div id="navbar" data-role="navbar">
 					<ul>
-						<li><a id="shadow" href="#" data-icon="star" data-theme="d">Shadow</a></li>
+						<li><a id="action" onclick="getIShadowLists()"
+							href="#iShadowHomePage" data-icon="arrow-l" data-theme="e">Back</a></li>
+						<li><a id="action" href="#" data-icon="home"
+							onclick="window.location='./home.html'" data-theme="f">Home</a></li>
+						<li><a id="shadow" href="#iShadowVotePage" data-icon="star"
+							data-theme="d">VoteList</a></li>
 
 					</ul>
 				</div>
@@ -92,7 +107,8 @@
 				<h1>Vote</h1>
 			</div>
 			<div data-role="content">
-				<ul data-role="listview" data-inset="true" data-theme="e" id="iShadowVoteEntDetails">
+				<ul data-role="listview" data-inset="true" data-theme="e"
+					id="iShadowVoteEntDetails">
 				</ul>
 				<ul id="populateShadowVoteList" data-role="listview">
 				</ul>
@@ -102,7 +118,12 @@
 				data-position="fixed" data-tap-toggle="false">
 				<div id="navbar" data-role="navbar">
 					<ul>
-						<li><a id="shadow" href="#" data-icon="star" data-theme="d">Shadow</a></li>
+						<li><a id="action" href="#iShadowHomePage"
+							onclick="getIShadowLists()" data-icon="arrow-l" data-theme="e">Back</a></li>
+						<li><a id="action" href="#" data-icon="home"
+							onclick="window.location='./home.html'" data-theme="f">Home</a></li>
+						<li><a id="shadow" href="#iShadowVotedPage" data-icon="star"
+							data-theme="d">Voted</a></li>
 
 					</ul>
 				</div>
@@ -110,53 +131,77 @@
 		</div>
 
 
-		<div id="iShadowVoteDetailsPage" data-role="page">
+		<div id="showCharts" data-role="page">
 			<div data-role="header" data-id="header" id="header"
 				data-position="fixed" data-theme="f" data-tap-toggle="false"
 				class="ui-header">
-				<h1>Vote</h1>
+				<h1>My Charts</h1>
+				<!-- <a href="#showCreatedPollDetails" data-role="button"
+					data-icon="arrow-l" data-inline="true">Back</a> -->
 			</div>
-			<div data-role="content">
+			<div id="chartContent" data-role="content">
+				<!-- <ul data-role="listview" data-inset="true" style="min-width: 210px;"
+					data-theme="c">
+					<li data-role="divider" data-theme="b">Question</li>
+					<li id="questionChart"></li>
+				</ul> -->
+				<!-- <div id="populateCharts" style="height: 100%; width: 100%;"></div> -->
 
-				<div id="menu">
-					<input type="hidden" id="shadowPollDetailsHidden"
-						name="myCreatedPollDetails" value="" /> <input type="hidden"
-						id="pollIdForCharts" name="shadowPollIdHidden" value="" />
-					<div>
-						<ul id="iShadowVoteDetail" data-role="listview">
-							<li data-role="divider" data-theme="b">Question:</li>
-							<li data-theme="c" id="questionShadowVoteLi"></li>
-						</ul>
-						<br /> <br /> <br />
-						<ul id="shadowVoteOptionsUl" data-role="listview">
 
-						</ul>
-						<br /> <br /> <br /> <br />
-
-						<ul id="shadowPollForDetailsUl" data-role="listview">
-						</ul>
-						<br /> <br />
-					</div>
-					<a id="showChartDetails" data-theme="d" data-role="button"
-						data-icon="flat-new" data-iconpos="right">Charts and Graphs</a>
-				</div>
 			</div>
 			<div id="footer" data-role="footer" data-id="footer1"
 				data-position="fixed" data-tap-toggle="false">
 				<div id="navbar" data-role="navbar">
 					<ul>
-						<li><a id="shadow" href="#" data-icon="star" data-theme="d">Shadow</a></li>
-
+						<li><a id="" href="#EntPollVote0" data-icon="arrow-l"
+							data-theme="e">Back</a></li>
+						<li><a id="" href="#" on data-icon="home"
+							onclick="window.location='./home.html'" data-theme="f">Home</a></li>
+						<li><a id="search-button" href="#iShadowVotedPage"
+							data-icon="flat-menu" data-theme="d"></a></li>
 					</ul>
 				</div>
 			</div>
+
 		</div>
+
+		<div id="showEmptyCharts" data-role="page">
+			<div data-role="header" data-id="header" id="header"
+				data-position="fixed" data-theme="f" data-tap-toggle="false"
+				class="ui-header">
+				<h1>My Charts</h1>
+				<!-- <a href="#showCreatedPollDetails" data-role="button"
+					data-icon="arrow-l" data-inline="true">Back</a> -->
+			</div>
+			<div data-role="content">
+
+
+				<h1>No charts to display</h1>
+
+			</div>
+			<div id="footer" data-role="footer" data-id="footer1"
+				data-position="fixed" data-tap-toggle="false">
+				<div id="navbar" data-role="navbar">
+					<ul>
+						<li><a id="" href="#EntPollVote0" data-icon="arrow-l"
+							data-theme="e">Back</a></li>
+						<li><a id="" href="#" on data-icon="home"
+							onclick="window.location='./home.html'" data-theme="f">Home</a></li>
+						<li><a id="search-button" href="#iShadowVotedPage"
+							data-icon="flat-menu" data-theme="d"></a></li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+
+
 
 	</div>
 	<script type="text/javascript" src="js/highcharts/highcharts.js"></script>
 	<script src="js/highcharts/highcharts-more.js"></script>
 
 	<script type="text/javascript" src="js/shadow.js"></script>
-	<script type="text/javascript" src="js/charts.js"></script>
+	<!-- <script type="text/javascript" src="js/charts.js"></script> -->
 </body>
 </html>

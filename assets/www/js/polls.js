@@ -23,11 +23,12 @@ var poll_voter_location_Longitude= '';
 var pictureSource;   // picture source
 var destinationType; // sets the format of returned value 
 var poll_media_type_key = "\"poll_media_type\":";
+var globalContacts = null;
 function onDeviceReady()
 {
 	sessionStorage.phonenum=getMyPhoneNumber();
 	//showMyCreatedPolls(sessionStorage.phonenum);
-	//getContactList();
+	getContactList();
 	//getMyGroups(sessionStorage.phonenum);
 	//showMyPolls(sessionStorage.phonenum);
 	//showAllPolls(sessionStorage.phonenum);
@@ -51,6 +52,8 @@ var onSuccesss = function(position) {
 
 	poll_voter_location_Latitude = position.coords.latitude;
 	poll_voter_location_Longitude = position.coords.longitude;
+	sessionStorage.Latitude = position.coords.latitude;
+	sessionStorage.Longitude = position.coords.longitude;
 };
 
 //onError Callback receives a PositionError object
@@ -124,10 +127,13 @@ function getCreatePollJSON(pollType){
 	var mediaType = 1;
 	for(i=1;i<=($('#optionlistul li').length);i++)
 	{
-		temp=temp+$('#option'+i).val();
+		if($('#option'+i).val() != ""){
+			//alert($('#option'+i).val());
+			temp=temp+$('#option'+i).val();
 
-		if(i !=($('#optionlistul li').length))
-			temp=temp+",";
+			if(i !=($('#optionlistul li').length))
+				temp=temp+",";
+		}
 	}
 	createPollString=createPollString+temp+"],"+poll_create_date_key+dq+getPollDate()+dq+","+poll_end_date_key+dq+($('#enddate').val())+dq+","+poll_creator_key+dq+sessionStorage.phonenum+dq+","+poll_category_key+dq+$( "#categories" ).val()+dq+",";
 
@@ -178,6 +184,7 @@ function getContactList()
 	function sortByContactName(a, b) { var x = a.name.formatted.toLowerCase(); var y = b.name.formatted.toLowerCase(); return ((x < y) ? -1 : ((x > y) ? 1 : 0)); }
 	function onSuccess(contacts) {
 		contacts.sort(sortByContactName);
+		globalContacts = contacts;
 		var html="";
 		for (var i = 0; i < contacts.length ; i++) {
 			if(contacts[i].name != null && contacts[i].phoneNumbers != null) {
@@ -208,12 +215,18 @@ function getContactList()
 
 $("#selectContactBtn").click(function() {	
 	//alert("Friends button");
-	getContactList();	
+	if(validateCreatePoll()) {
+		getContactList();
+		location.href = "#selectContactsPage";
+	}
 });
 
 $("#selectGroupBtn").click(function() {	
 	//alert("Friends button");
-	getMyGroups(sessionStorage.phonenum);	
+	if(validateCreatePoll()) {
+		getMyGroups(sessionStorage.phonenum);
+		location.href = "#selectgroups";
+	}
 });
 
 $("#assignedPollsBtn").click(function() {	
@@ -226,15 +239,76 @@ $("#publicPollsBtn").click(function() {
 	showAllPolls(sessionStorage.phonenum);	
 });
 
+function validateCreatePoll() {
+	if($('#question').val() == "") {
+		alert("Question is empty!!!");
+		return false;
+	} else if($("#option1").val() == "") {
+		alert("Option 1 is empty!!!");
+		return false;
+	} else if($("#option2").val() == "") {
+		alert("Option 2 is empty!!!");
+		return false;
+	} else if($('#enddate').val() == "") {
+		alert("End date is empty!!!");
+		return false;
+	} else {
+		for(var i=1;i<=($('#optionlistul li').length);i++)
+		{
+			for(var j=i+1;j<=($('#optionlistul li').length);j++)
+			{
+				if($('#option'+i).val() == $('#option'+j).val()){
+					alert("Option "+ i +" & Option " + j + " are having same values!!!");			
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
 
 $('.submitPoll').click(function()
 		{
-	var data=getCreatePollJSON(($(this).attr('id')));
-	//alert("Data:"+data);
-	var url = globalliveurl +"/api/votesapp/poll";	
-	//var url="http://10.0.2.2:8080/VotesApp/api/votesapp/poll";
+	if($(this).attr('id') !== "submitToPublic" && ($("input[name='checkedGroups']:checked").size() == 0 && $("input[name='checkedContactsPoll']:checked").size()  == 0)) {
+		alert("No selection!!!");
+	} else {
+		var data=getCreatePollJSON(($(this).attr('id')));
+		//alert("Data:"+data);
+		var url = globalliveurl +"/api/votesapp/poll";	
+		//var url="http://10.0.2.2:8080/VotesApp/api/votesapp/poll";
+		$.ajax({
+			type: "POST",
+			//contentType: "application/json",
+			//dataType: "json",
+			url: url,
+			data: data,
+			success: function(msg){
+				//$("body").append(msg.d);
+				//alert("success");
+				var obj = jQuery.parseJSON( ''+ msg +'' );
+				//alert("Poll Media Type:"+poll_media_type_key+($('#smallImage').attr("src"))+"msg:"+msg+" pollid:"+obj.PollId);
+				if((($('#smallImage').attr("src"))!= '') && ($('#smallImage').attr("src")) != null )
+				{
+					sendMediaToS3(1,($('#smallImage').attr("src")),obj.PollId);
+				}
+				location.href="#home-page";
+			},
+			error: function () {
+				alert("Error");
+			}
+		});
+	} 
+		});
+
+
+/*$("#deletePoll").click(function() {
+	alert("Deleting poll.");
+	alert("Are you sure?");
+	var data=$("#pollIdForCharts").val();
+	alert("Data:"+data);
+	var url = globalurl +"/api/votesapp/poll/"+data;	
 	$.ajax({
-		type: "POST",
+		type: "DELETE",
 		//contentType: "application/json",
 		//dataType: "json",
 		url: url,
@@ -242,20 +316,13 @@ $('.submitPoll').click(function()
 		success: function(msg){
 			//$("body").append(msg.d);
 			//alert("success");
-			var obj = jQuery.parseJSON( ''+ msg +'' );
-			//alert("Poll Media Type:"+poll_media_type_key+($('#smallImage').attr("src"))+"msg:"+msg+" pollid:"+obj.PollId);
-			if((($('#smallImage').attr("src"))!= '') && ($('#smallImage').attr("src")) != null )
-			{
-				sendMediaToS3(1,($('#smallImage').attr("src")),obj.PollId);
-			}
-			location.href="#home-page";
+			getMyGroups(sessionStorage.phonenum);
 		},
 		error: function () {
 			alert("Error");
 		}
 	});
-
-		});
+});*/
 
 /*$('#selectgroups').click(function()
 		{
@@ -311,7 +378,7 @@ function getMyGroups(phonenum){
 	});
 }
 
-function getContactNames(callback,phonenum)
+/*function getContactNames(callback,phonenum)
 {
 	var returnVal='';
 	function onSuccess(contacts) { 
@@ -342,6 +409,60 @@ function getContactNames(callback,phonenum)
 	options.multiple = true;
 	var fields       =  ["displayName", "name", "phoneNumbers"];
 	navigator.contacts.find(fields, onSuccess, onError, options);
+}*/
+
+function getContactNames(phonenum)
+{
+	var returnVal='';
+	var contacts = globalContacts;
+	//alert("getContactNames success:"+phonenum+"<>"+contacts.length);
+	for (var i = 0; i < contacts.length ; i++) {
+		if(contacts[i].name != null && contacts[i].phoneNumbers != null) {
+			var name=contacts[i].name.formatted;
+
+			var phone=(contacts[i].phoneNumbers[0].value).replace(/[^\w]/gi, '');
+			phone = phone.substr(-10);
+			//alert(phone+":"+phonenum);
+			if(phonenum == phone)
+			{
+				//alert("phone present");
+				returnVal= name;
+				break;
+			}}
+	}
+	//alert("calling callback");
+	return returnVal;
+
+	/*function onSuccess(contacts) { 
+		alert("getContactNames success:"+phonenum+"<>"+contacts.length);
+		for (var i = 0; i < contacts.length ; i++) {
+			if(contacts[i].name != null && contacts[i].phoneNumbers != null) {
+				var name=contacts[i].name.formatted;
+
+				var phone=(contacts[i].phoneNumbers[0].value).replace(/[^\w]/gi, '');
+				phone = phone.substr(-10);
+				//alert(phone+":"+phonenum);
+				if(phonenum == phone)
+				{
+					alert("phone present");
+					returnVal= name;
+					break;
+				}}
+		}
+		alert("calling callback");
+		callback(returnVal);
+	};
+	function onError(contactError) {
+		alert('onError!');
+	};
+
+	var options      = new ContactFindOptions();
+	options.filter	 = "";
+	options.multiple = true;
+	var fields       =  ["displayName", "name", "phoneNumbers"];
+	navigator.contacts.find(fields, onSuccess, onError, options);*/
+
+
 }
 
 function escapeCharsForOptions(jmsg)
@@ -376,7 +497,12 @@ function showMyPolls(phonenum)
 			if(!(isEmpty(obj)))
 			{
 				for(var i=0;i<obj.My_Polls.length;i++) {
-					html1 += '<li class="polldetailssclass"><a id= "' + obj.My_Polls[i].poll_id+'" href="#showPollDetails">'+obj.My_Polls[i].poll_question+'</a></li>';
+					var html = getContactNames(obj.My_Polls[0].poll_creator);
+					if(html == "") {
+						html = obj.My_Polls[0].poll_creator;
+					}
+					//alert(html);
+					html1 += '<li class="polldetailssclass"><a id= "' + obj.My_Polls[i].poll_id+'" href="#showPollDetails">'+obj.My_Polls[i].poll_question+'</a><p>Created by: ' + html + '</p></li>';
 				}
 			}
 			//'<input type="radio" name="choice" id="choice" value="'+My_Polls[i].poll_options[j]+'"><label for="choice">'+obj.My_Polls[i].poll_options[j]+'</label>'
@@ -407,10 +533,11 @@ function redirectToGroup()
 	window.location='./groups.html';
 }
 
+
 function tapHandler( event ){
 	//alert("tapped");
 	var data=event.target.getAttribute("id");
-	alert("id:"+data);
+	//alert("id:"+data);
 	var url = globalliveurl +"/api/votesapp/poll/ById/"+data;
 	//var url="http://10.0.2.2:8080/VotesApp/api/votesapp/poll/ById/"+data;
 	var temp_mem_name="";
@@ -426,7 +553,7 @@ function tapHandler( event ){
 			if(!(isEmpty(obj)))
 			{
 				html= obj.This_Poll[0].poll_question;
-				alert(html);
+				//alert(html);
 				$('#questionPrivateLi').html(html);
 				if(obj.This_Poll[0].poll_media_link !='' && obj.This_Poll[0].poll_media_link!=null)
 				{
@@ -438,8 +565,12 @@ function tapHandler( event ){
 					$("#spacesAfterImgPrivate").html(html);
 				}
 
-				html= obj.This_Poll[0].poll_creator;
-				alert(html);
+				//html= obj.This_Poll[0].poll_creator;
+				var html = getContactNames(obj.This_Poll[0].poll_creator);
+				if(html == "") {
+					html = obj.This_Poll[0].poll_creator;
+				}
+				//alert(html);
 				$('#PrivatePollByDetailsLi').html(html);
 				html='';
 				tempArr = escapeCharsForOptions(obj.This_Poll[0].poll_options);
@@ -450,17 +581,17 @@ function tapHandler( event ){
 				tempArr = [];
 
 			}
-			alert("html:"+html);
+			//alert("html:"+html);
 			$('#privateOptions').empty();
 			$(html).appendTo("#privateOptions");
 			location.href="#showPollDetails";
 		},
 		complete: function() {
-	           
-            $(".pollOptionsPrivateClass").checkboxradio();
-            $(".pollOptionsPrivateClass").checkboxradio("refresh").trigger("create");
-          
-        },
+
+			$(".pollOptionsPrivateClass").checkboxradio();
+			$(".pollOptionsPrivateClass").checkboxradio("refresh").trigger("create");
+
+		},
 		error: function () {
 			alert("Error");
 		}
@@ -480,7 +611,7 @@ function showAllPolls(phonenum)
 		async:false,
 		url: url,
 		success: function(msg){
-			alert(msg);
+			//alert(msg);
 			var obj = jQuery.parseJSON( ''+ msg +'' );
 			var tempArr = new Array();
 			var html1= '';
@@ -517,7 +648,7 @@ function showAllPolls(phonenum)
 }
 
 function tapPublicPollDetails( event ){
-	alert("tapped");
+	//alert("tapped");
 	var data=event.target.getAttribute("id");
 	//alert("id:"+data);
 	var url = globalliveurl +"/api/votesapp/poll/ById/"+data;
@@ -575,11 +706,11 @@ function tapPublicPollDetails( event ){
 			location.href="#showPublicPollDetailsPage";
 		},
 		complete: function() {
-	           
-            $(".pollOptionsClass").checkboxradio();
-            $(".pollOptionsClass").checkboxradio("refresh").trigger("create");
-          
-        },
+
+			$(".pollOptionsClass").checkboxradio();
+			$(".pollOptionsClass").checkboxradio("refresh").trigger("create");
+
+		},
 		error: function () {
 			alert("Error");
 		}
@@ -619,7 +750,7 @@ $('#votePublic').click(function()
 	//var url="http://10.0.2.2:8080/VotesApp/api/votesapp/poll/myVote";
 	var msg = $("#publicPollHidden").val();
 	var data = getVoteJSON(msg,1);
-	alert(data);
+	//alert(data);
 	$.ajax({
 		type: "POST",
 		url: url,
@@ -631,6 +762,7 @@ $('#votePublic').click(function()
 			//alert("Public Poll Voted Successfully");
 			showAllPolls(sessionStorage.phonenum);
 			location.href="#showAllPollsPage";
+			alert("Voted Successfully");
 		},
 		error: function () {
 			alert("Error");
@@ -651,9 +783,10 @@ $('#vote').click(function()
 		url: url,
 		data: data,
 		success: function(msg){
-			alert("success");
-			showAllPolls(sessionStorage.phonenum);
+			//alert("success");
+			showMyPolls(sessionStorage.phonenum);
 			location.href="#showPollsPage";
+			alert("Voted Successfully");
 		},
 		error: function () {
 			alert("Error");
@@ -725,7 +858,7 @@ function escapeCharacters(str)
 }
 
 function tapCreatedPollDetails( event ){
-	alert("tapped");
+	//alert("tapped");
 	var data=event.target.getAttribute("id");
 	//alert("id:"+data);
 	var url = globalliveurl +"/api/votesapp/poll/ById/"+data;
@@ -737,7 +870,7 @@ function tapCreatedPollDetails( event ){
 		url: url,
 		data:data,
 		success: function(msg){
-			alert(msg);
+			//alert(msg);
 			var obj = jQuery.parseJSON( ''+ msg +'' );
 			$("#myCreatedPollHidden").val(msg);
 			$('#pollIdForCharts').val(obj.This_Poll[0].poll_id);
@@ -766,7 +899,16 @@ function tapCreatedPollDetails( event ){
 				var temp1= obj.This_Poll[0].poll_groupname;
 				var temp2=escapeCharacters(obj.This_Poll[0].poll_participants);
 
-
+				if(obj.This_Poll[0].poll_media_link !='' && obj.This_Poll[0].poll_media_link!=null)
+				{
+					html='<br /> <br /> <br />';
+					$("#spacesBeforeImgCreated").html(html);
+					alert("Image Alert"+obj.This_Poll[0].poll_media_link);
+					$('#smallImgCreated').attr("src",obj.This_Poll[0].poll_media_link);
+					$('#largeImgCreated').attr("src",obj.This_Poll[0].poll_media_link);
+					$("#spacesAfterImgCreated").html(html);
+				}
+				
 				if(temp1[0]!='0' && temp1.length!=0)
 				{
 					html='<li data-role="divider" data-theme="e">Created For Groups:</li>';
@@ -783,12 +925,20 @@ function tapCreatedPollDetails( event ){
 					html='<li data-role="divider" data-theme="e">Created For Friends:</li>';
 					for(var i=0;i<temp2.length;i++)
 					{
-						getContactNames(function(name){
+						/*getContactNames(function(name){
 							alert(name);
 							html='<li>'+name+'</li>';
 							$(html).appendTo( "#createdPollForDetailsUl" );
 							$("#createdPollForDetailsUl").listview("refresh");
-						},temp2[i]);
+						},temp2[i]);*/
+						var name = getContactNames(temp2[i]);
+						if(name == "") {
+							name = temp2[i];
+						}
+						//alert(name);
+						html +='<li>'+name+'</li>';
+						//$(html).appendTo( "#createdPollForDetailsUl" );
+						//$("#createdPollForDetailsUl").listview("refresh");
 
 					}
 					temp2 = [];
@@ -928,8 +1078,8 @@ function updateQueryStringParameter(uri, key, value) {
 
 function sendMediaToS3(type,imageURI,pollid) {
 	var url = globalliveurl+"/api/votesapp/poll/media?pollid="+pollid;
-	alert(url);
-	alert("Image Uri:"+imageURI);
+	//alert(url);
+	//alert("Image Uri:"+imageURI);
 	var options = new FileUploadOptions();
 	options.fileKey="file";
 	options.fileName=imageURI.substr(imageURI.lastIndexOf('/')+1);
@@ -948,9 +1098,9 @@ function sendMediaToS3(type,imageURI,pollid) {
 }
 
 function win(r) {
-	alert("Code = " + r.responseCode);
-	alert("Response = " + r.response);
-	alert("Sent = " + r.bytesSent);
+	//alert("Code = " + r.responseCode);
+	//alert("Response = " + r.response);
+	//alert("Sent = " + r.bytesSent);
 }
 
 function fail(error) {
@@ -960,15 +1110,23 @@ function fail(error) {
 }
 
 $(document).on('pagehide', '#showPublicPollDetailsPage', function(){ 
-	alert("onPageHide showPublicPollDetails");
+	//alert("onPageHide showPublicPollDetails");
 	$("#spacesBeforeImg").empty();
 	$("#spacesAfterImg").empty();
 	$('#smallImg').attr("src","");
 	$('#largeImg').attr("src",""); 
 });
 
+$(document).on('pagehide', '#showCreatedPollDetails', function(){ 
+	//alert("onPageHide showCreatedPollDetails");
+	$("#spacesBeforeImgCreated").empty();
+	$("#spacesAfterImgCreated").empty();
+	$('#smallImgCreated').attr("src","");
+	$('#largeImgCreated').attr("src",""); 
+});
+
 $(document).on('pagehide', '#showPollDetails', function(){ 
-	alert("onPageHide showPublicPollDetails");
+	//alert("onPageHide showPublicPollDetails");
 	$("#spacesBeforeImgPrivate").empty();
 	$("#spacesAfterImgPrivate").empty();
 	$('#smallPImg').attr("src","");

@@ -16,7 +16,7 @@ $(function(){
 	//alert("In OnDeviceReady"+phonenum);
 	getContactList();
 
-	document.addEventListener("backbutton", onBackButtonDown, false);
+	//document.addEventListener("backbutton", onBackButtonDown, false);
 
 	function onBackButtonDown() {
 	    // Handle the back button
@@ -81,7 +81,7 @@ $(function(){
 				temp=temp+",";
 		}
 		createGroupString=createGroupString+temp+"]}";
-		alert(createGroupString);
+		//alert(createGroupString);
 		return createGroupString;
 
 	}
@@ -89,7 +89,7 @@ $(function(){
 	$("#create-group").click(function() {
 		
 		$("#groupname").val("");
-		//getContactList();
+		getContactList();
 		
 	});
 	
@@ -97,34 +97,51 @@ $(function(){
 //	{"name":"family","phoneNumber":9960085953,"members":[9985565624,8875598624]}
 
 	$( "#creategroup" ).click(function() {
-		alert("Button Clicked");
-		var data=getCreateGroupJSON();
-		var url = globalurl +"/api/user/group";		
-		//var url="http://10.0.2.2:8080/VotesApp/api/user/group";
-		$.ajax({
-			type: "POST",
-			//contentType: "application/json",
-			//dataType: "json",
-			url: url,
-			data: data,
-			success: function(msg){
-				//$("body").append(msg.d);
-				alert("success");
-				getMyGroups(sessionStorage.phonenum);
-			},
-			error: function () {
-				alert("Error");
+		//alert("Button Clicked");
+		
+		if($( "#groupname" ).val() == "") {
+			alert("Group name is empty!!!");
+		} else {			
+			var selectedContacts = new Array();
+			$.each($("input[name='checkedContacts']:checked"), function() {
+				selectedContacts.push($(this).val());
+			});
+			if(selectedContacts.length == 0) {	
+				alert("No contacts selected!!!");
+			} else {
+				var data=getCreateGroupJSON();
+				var url = globalurl +"/api/user/group";		
+				$.ajax({
+					type: "POST",
+					//contentType: "application/json",
+					//dataType: "json",
+					url: url,
+					data: data,
+					success: function(msg){
+						var jmsg = jQuery.parseJSON( ''+ msg +'' );
+						if(jmsg.Msg == "success") {
+							//alert("success");
+							getMyGroups(sessionStorage.phonenum);
+							location.href = "#home-page";
+						} else {
+							alert("Unable to save!!!");
+						}
+					},
+					error: function () {
+						alert("Error");
+					}
+				});
 			}
-		});
+		}	
 	});
 	
 	//deletegroup
 	$( "#delete-groups" ).click(function() {
-		alert("Button Clicked");
+		//alert("Button Clicked");
+		alert("Are you sure?");
 		var data="id="+$("#groupid").val();
 		//alert("Data:"+data);
 		var url = globalurl +"/api/user/group";	
-		//var url="http://10.0.2.2:8080/VotesApp/api/user/group";
 		$.ajax({
 			type: "DELETE",
 			//contentType: "application/json",
@@ -163,7 +180,7 @@ $(function(){
 			success: function(msg){
 				var obj = jQuery.parseJSON( ''+ msg +'' );
 				var html= "";
-				if(!(isEmpty(obj)))
+				if(!(isEmpty(obj)) && obj.groups != null && !(isEmpty(obj)))
 				{
 					for(var i=0;i<obj.groups.length;i++) {
 						html += '<li class="groupListItem" id= ><a id="' + obj.groups[i]._id.$oid +'" href ="#group-details">'+obj.groups[i].name+'</a></li>';
@@ -224,7 +241,7 @@ $(function(){
 
 	function tapholdHandler( event ){
 		var html = "";
-		alert("Long press");
+		//alert("Long press");
 
 		//$( event.target ).addClass( "taphold" );
 	}
@@ -237,7 +254,6 @@ $(function(){
 		//var url="http://10.0.2.2:8080/VotesApp/api/user/group";
 		var temp_mem_name="";
 		$.ajax({
-			async:false,
 			type: "GET",
 			url: url,
 			data:data,
@@ -254,8 +270,8 @@ $(function(){
 						alert("temp_mem"+temp_mem_name);*/
 						var name = getContactNames(obj.members[k]);
 						//alert(name);
-							html = '<li>'+name+'</li>';
-							$(html).appendTo( "#groupmembers" );
+							html += '<li>'+name+'</li>';
+							//$(html).appendTo( "#groupmembers" );
 							//$("#groupmembers").listview("refresh");
 						
 						temp_mem_name="";

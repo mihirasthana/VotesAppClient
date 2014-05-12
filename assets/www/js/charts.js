@@ -25,10 +25,13 @@ $(document).ready(function(){
 		return pollOptions;
 	}
 
-	$("#showChartDetails").click(function(){
+	
+	$("#columnChart").click(function() {
+		
+		//alert("hi");
+		
 		alert("chart displayed");
-		//$("#populateBarCharts").html("No Charts to Display.");
-		//$("#populatePieCharts").html("No Charts to Display.");
+
 		var pollID = $("#pollIdForCharts").val();
 		//alert(pollID);
 		var url=globalliveurl+"/api/votesapp/poll/voteResult/"+pollID;
@@ -41,38 +44,33 @@ $(document).ready(function(){
 				var jmsg = JSON.parse('' + msg + '');
 				var pollOptions  = [];
 				var dataBar = [];
-				var dataPie = [];
 				var barData = '[';
-				/*{name: 'Yes',data: [49.9]}*/
-				alert(jmsg.poll_question);
-				//alert(jmsg.TotalOptions);
+				//alert(jmsg.poll_question);
 				if(!(isEmpty(jmsg)) && jmsg.Msg != "no_votes")
 				{
-					alert("has polls");
+					//alert("has polls");
 					pollOptions = escapeCharsForOptions(jmsg.poll_options);
 					for(var i=0;i<jmsg.TotalOptions;i++)
 					{
 						dataBar[i] = jmsg.OptionsVoteCount[i+1];
-						dataPie[i] = [pollOptions[i], jmsg.OptionsVoteCount[i+1]];
-						//data[i] = [pollOptions[i], jmsg.OptionsVoteCount[i+1]];
 						barData += "{name:'"+pollOptions[i].replace(/\s/g, '')+"',data:["+jmsg.OptionsVoteCount[i+1]+"]}";
 						if(i != (jmsg.TotalOptions-1))
 							barData +=',';
 						else
 							barData +=']';
 					}
-					alert("barData>>"+barData);
+					//alert("barData>>"+barData);
 
 					$("#questionChart").empty();
 					//$(""+jmsg.poll_question+"").appendTo('#questionChart');
 					var html = ""+jmsg.poll_question+"";
 					$('#questionChart').html(html);
-					$("#populateBarCharts").html("");
-					$("#populatePieCharts").html("");
+					$("#populateCharts").html("");
+					
 					$("#showCharts").on("pageshow", function(event){
 
 
-						$('#populateBarCharts').highcharts({
+						$('#populateCharts').highcharts({
 							chart: {
 								type: 'column'
 							},
@@ -91,33 +89,173 @@ $(document).ready(function(){
 									text: 'Count'
 								}
 							},
-							/*tooltip: {
-					                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-					                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-					                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-					                footerFormat: '</table>',
-					                shared: true,
-					                useHTML: true
-					            },*/
 							plotOptions: {
 								column: {
 									pointPadding: 0.2,
 									borderWidth: 0
 								}
 							},
-							series: eval ("(" + barData + ")")/*[{
-								name: 'Yes',
-								data: [49.9]
+							series: eval ("(" + barData + ")")
+						});					
 
-							}, {
-								name: 'No',
-								data: [83.6]
+					});
+					location.href = "#showCharts";
+				} else {
+					location.href = "#showEmptyCharts";
+				}
+			},
+			error: function () {
+				alert("error");
+			}
+		});	
+		
+	});
+	
+	
+	$("#barChart").click(function() {
+		
+		//alert("hi");
+		
+		//alert("chart displayed");
+		var pollID = $("#pollIdForCharts").val();
+		alert(pollID);
+		var url=globalliveurl+"/api/votesapp/poll/voteResult/"+pollID;
+		$.ajax({
+			type: "GET",
+			async:false,
+			contentType: "application/json; charset=utf-8",
+			url: url,
+			success: function(msg){
+				var jmsg = JSON.parse('' + msg + '');
+				var pollOptions  = [];
+				var dataBar = [];
+				var barData = '[';
+				//alert(jmsg.poll_question);
+				if(!(isEmpty(jmsg)) && jmsg.Msg != "no_votes")
+				{
+					//alert("has polls");
+					pollOptions = escapeCharsForOptions(jmsg.poll_options);
+					for(var i=0;i<jmsg.TotalOptions;i++)
+					{
+						dataBar[i] = jmsg.OptionsVoteCount[i+1];
+						barData += "{name:'"+pollOptions[i].replace(/\s/g, '')+"',data:["+jmsg.OptionsVoteCount[i+1]+"]}";
+						if(i != (jmsg.TotalOptions-1))
+							barData +=',';
+						else
+							barData +=']';
+					}
+					//alert("barData>>"+barData);
 
-							} ]*/
-						});
+					$("#questionChart").empty();
+					//$(""+jmsg.poll_question+"").appendTo('#questionChart');
+					var html = ""+jmsg.poll_question+"";
+					$('#questionChart').html(html);
+					$("#populateCharts").html("");
+					
+					$("#showCharts").on("pageshow", function(event){
 
+						$('#populateCharts').highcharts({
+				            chart: {
+				                type: 'bar'
+				            },
+				            title: {
+				                text: ''
+				            },
+				            /*subtitle: {
+				                text: 'Source: Wikipedia.org'
+				            },*/
+				            xAxis: {
+				                categories: [
+								             html
+								             ],
+				                title: {
+				                    text: null
+				                }
+				            },
+				            yAxis: {
+				                min: 0,
+				                title: {
+				                    text: 'Count',
+				                    align: 'high'
+				                },
+				                labels: {
+				                    overflow: 'justify'
+				                }
+				            },
+				            tooltip: {
+				                valueSuffix: ' count'
+				            },
+				            plotOptions: {
+				                bar: {
+				                    dataLabels: {
+				                        enabled: true
+				                    }
+				                }
+				            },
+				            legend: {
+				                layout: 'vertical',
+				                align: 'right',
+				                verticalAlign: 'top',
+				                x: -40,
+				                y: 100,
+				                floating: true,
+				                borderWidth: 1,
+				                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor || '#FFFFFF'),
+				                shadow: true
+				            },
+				            credits: {
+				                enabled: false
+				            },
+				            series: eval ("(" + barData + ")")
+				        });
+				    });
+					location.href = "#showCharts";
+				} else {
+					location.href = "#showEmptyCharts";
+				}
+			},
+			error: function () {
+				alert("error");
+			}
+		});	
+		
+	});
+	
+	$("#pieChart").click(function() {
+		
+		alert("pie");
+		alert("chart displayed");
 
-						$('#populatePieCharts').highcharts({
+		var pollID = $("#pollIdForCharts").val();
+		//alert(pollID);
+		var url=globalliveurl+"/api/votesapp/poll/voteResult/"+pollID;
+		$.ajax({
+			type: "GET",
+			async:false,
+			contentType: "application/json; charset=utf-8",
+			url: url,
+			success: function(msg){
+				var jmsg = JSON.parse('' + msg + '');
+				var pollOptions  = [];
+				var dataPie = [];
+				//alert(jmsg.poll_question);
+				if(!(isEmpty(jmsg)) && jmsg.Msg != "no_votes")
+				{
+					//alert("has polls");
+					pollOptions = escapeCharsForOptions(jmsg.poll_options);
+					for(var i=0;i<jmsg.TotalOptions;i++)
+					{
+						dataPie[i] = [pollOptions[i], jmsg.OptionsVoteCount[i+1]];
+					}
+					//alert("pieData>>"+dataPie);
+
+					$("#questionChart").empty();
+					//$(""+jmsg.poll_question+"").appendTo('#questionChart');
+					var html = ""+jmsg.poll_question+"";
+					$('#questionChart').html(html);
+					$("#populateCharts").html("");
+					$("#showCharts").on("pageshow", function(event){
+						$('#populateCharts').highcharts({
 							chart: {
 								plotBackgroundColor: null,
 								plotBorderWidth: null,
@@ -126,7 +264,7 @@ $(document).ready(function(){
 							title: {
 								text: ''
 							},
-
+				
 							plotOptions: {
 								pie: {
 									allowPointSelect: true,
@@ -146,28 +284,6 @@ $(document).ready(function(){
 								data: dataPie
 							}]
 						});
-
-						$('#populateBubbleCharts').highcharts({
-
-							chart: {
-								type: 'bubble',
-								zoomType: 'xy'
-							},
-
-							title: {
-								text: ''
-							},
-
-							series: [{name:"San Jose",
-								data: [[97,36,79]]
-							}, {name:"Santa Clara",
-								data: [[25,10,87]]
-							}, {name:"Fremont",
-								data: [[47,47,21]]
-							}]
-
-						});
-
 					});
 					location.href = "#showCharts";
 				} else {
@@ -178,118 +294,69 @@ $(document).ready(function(){
 				alert("error");
 			}
 		});	
+
+	});
+	
+	$("#bubbleChart").click(function() {
+		alert("bubble");
+		
+		var pollID = $("#pollIdForCharts").val();
+		//alert(pollID);
+		var urlGeo=globalliveurl+"/api/votesapp/poll/voteResultGeo/"+pollID;
+		$.ajax({
+			type: "GET",
+			async:false,
+			contentType: "application/json; charset=utf-8",
+			url: urlGeo,
+			success: function(msg){
+				//alert(msg);
+				var jmsg = JSON.parse('' + msg + '');
+				var bubbleData = [];
+				var i = 0;
+				// TODO: Need to add condition for empty array. Not able to do by length parameter.
+				if(jmsg.Msg == "success" && jmsg.city_count != null) {
+					for(var key in jmsg.city_count) {
+						bubbleData[i] = {name:""+key+"",data:[[randomNoGenerator(10, 100),randomNoGenerator(10, 100),jmsg.city_count["" + key +""]]]};
+						i++;						
+					}
+					//alert(bubbleData);
+				
+				
+					$("#questionChart").empty();
+					//$(""+jmsg.poll_question+"").appendTo('#questionChart');
+					var html = ""+jmsg.poll_question+"";
+					$('#questionChart').html(html);
+					
+					$("#showCharts").on("pageshow", function(event){
+						$('#populateCharts').highcharts({
+		
+							chart: {
+								type: 'bubble',
+								zoomType: 'xy'
+							},
+		
+							title: {
+								text: ''
+							},
+		 
+							series: bubbleData
+							
+						});
+					});
+					location.href = "#showCharts";
+				} else {
+					location.href = "#showEmptyCharts";
+				}
+			},
+			error: function () {
+				alert("error");
+			}
+		
+		});
 	});
 
-
-	/*$("#piechart").click(function(){
-			alert("chart displayed");
-			$("#populateCharts").html("");
-			var pollID = $("#pollIdForCharts").val();
-			//alert(pollID);
-			var url="http://votesapp.elasticbeanstalk.com/api/votesapp/poll/voteResult/"+pollID;
-			$.ajax({
-				type: "GET",
-				contentType: "application/json; charset=utf-8",
-				//dataType: "json",
-				url: url,
-				async:false,
-				//data: "{}",
-				success: function(msg){
-					var jmsg = JSON.parse('' + msg + '');
-					var pollOptions  = [];
-					var data = [];
-					alert(jmsg);
-					if(!(isEmpty(jmsg)) && jmsg.Msg != "no_votes")
-					{
-						pollOptions = escapeCharsForOptions(jmsg.poll_options);
-						for(var i=0;i<jmsg.TotalOptions;i++)
-						{
-							//data[i] = jmsg.OptionsVoteCount[i+1];
-							data[i] = [pollOptions[i], jmsg.OptionsVoteCount[i+1]];
-
-						}
-
-						$("#questionChart").empty();
-						//$(""+jmsg.poll_question+"").appendTo('#questionChart');
-						var html = ""+jmsg.poll_question+"";
-						$('#questionChart').html(html);
-
-						$("#showCharts").on("pageshow", function(event){				
-
-
-							var plot1 = jQuery.jqplot ('populatePieCharts', [data],
-									{
-								seriesDefaults: {
-									// Make this a pie chart.
-									renderer: jQuery.jqplot.PieRenderer,
-									rendererOptions: {
-										// Put data labels on the pie slices.
-										// By default, labels show the percentage of the slice.
-										showDataLabels: true
-									}
-								},
-								legend: { show:true, location: 'e' }
-									}
-							);
-						});
-						alert(" after successs");
-					}
-				},
-				error: function () {
-					alert("error");
-				}
-			});	
-		});*/
+	
+	function randomNoGenerator(min, max) {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
 });
-
-
-
-/*$(document).ready(function(){
-    var s1 = [200, 600, 700, 1000];
-    var s2 = [460, -210, 690, 820];
-    var s3 = [-260, -440, 320, 200];
-    // Can specify a custom tick Array.
-    // Ticks should match up one for each y value (category) in the series.
-    var ticks = ['May', 'June', 'July', 'August'];
-
-    $("#mystats").bind("pageshow", function(event){
-    	alert("hisdf");
-	    var plot1 = $.jqplot('barChart', [s1, s2, s3], {
-	        // The "seriesDefaults" option is an options object that will
-	        // be applied to all series in the chart.
-	        seriesDefaults:{
-	            renderer:$.jqplot.BarRenderer,
-	            rendererOptions: {fillToZero: true}
-	        },
-	        // Custom labels for the series are specified with the "label"
-	        // option on the series option.  Here a series option object
-	        // is specified for each series.
-	        series:[
-	            {label:'Hotel'},
-	            {label:'Event Regristration'},
-	            {label:'Airfare'}
-	        ],
-	        // Show the legend and put it outside the grid, but inside the
-	        // plot container, shrinking the grid to accomodate the legend.
-	        // A value of "outside" would not shrink the grid and allow
-	        // the legend to overflow the container.
-	        legend: {
-	            show: true,
-	            placement: 'outsideGrid'
-	        },
-	        axes: {
-	            // Use a category axis on the x axis and use our custom ticks.
-	            xaxis: {
-	                renderer: $.jqplot.CategoryAxisRenderer,
-	                ticks: ticks
-	            },
-	            // Pad the y axis just a little so bars can get close to, but
-	            // not touch, the grid boundaries.  1.2 is the default padding.
-	            yaxis: {
-	                pad: 1.05,
-	                tickOptions: {formatString: '$%d'}
-	            }
-	        }
-	    });
-    });
-});*/
