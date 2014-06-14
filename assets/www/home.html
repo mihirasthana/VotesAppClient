@@ -49,7 +49,7 @@
 					data-icon="flat-new" data-iconpos="right">Create Poll</a> <a
 					id="quickVote" data-theme="f" href="#showAllPollsPage"
 					data-role="button" data-icon="plus" data-iconpos="right">Quick
-					Vote</a><a data-theme="a" href="#polls-page" data-role="button"
+					Vote</a><a data-theme="b" href="#polls-page" data-role="button"
 					data-icon="flat-eye" data-iconpos="right">Polls</a>
 				<!-- <a
 					data-theme="g" href="#trending" data-role="button"
@@ -87,12 +87,17 @@
 
 			<div data-role="content">
 				<a data-theme="d" href="#showMyCreatedPollsPage" data-role="button"
-					data-icon="flat-new" data-iconpos="right" id="showCreatedPollsBtn">My
-					Created Polls</a> <a data-theme="f" href="#showPollsPage"
+					data-icon="flat-new" data-iconpos="right" id="showCreatedPollsBtn"
+					style="height: 60px; font-size: 48px; padding-top: 25px; padding-bottom: 25px;">My
+					Created Polls</a> <a data-theme="e" href="#showPollsPage"
 					id="assignedPollsBtn" data-role="button" data-icon="plus"
-					data-iconpos="right">Polls To Vote</a><a data-theme="a"
-					id="publicPollsBtn" href="#showAllPollsPage" data-role="button"
-					data-icon="flat-eye" data-iconpos="right">Public Polls</a>
+					data-iconpos="right"
+					style="height: 60px; font-size: 48px; padding-top: 25px; padding-bottom: 25px;">Polls
+					To Vote</a><a data-theme="b" id="publicPollsBtn"
+					href="#showAllPollsPage" data-role="button" data-icon="flat-eye"
+					data-iconpos="right"
+					style="height: 60px; font-size: 48px; padding-top: 25px; padding-bottom: 25px;">Public
+					Polls</a>
 
 
 			</div>
@@ -183,10 +188,12 @@
 				<div data-role="fieldcontain">
 					<label for="select-choice-1" class="select">Categories</label> <select
 						name="select-choice-1" id="categories">
-						<option value="Fun">Fun</option>
-						<option value="Entertainment">Entertainment</option>
-						<option value="Cars">Cars</option>
-						<option value="Timepass">TimePass</option>
+						<option value="entertainment">Entertainment</option>
+						<option value="fun">Fun</option>
+						<option value="misc">Misc</option>
+						<option value="politics">Politics</option>
+						<option value="sports">Sports</option>
+
 					</select>
 				</div>
 				<div>
@@ -345,11 +352,11 @@
 						</ul>
 						<div id="spacesBeforeImgCreated"></div>
 						<div align='center' id="ImagePollCreated">
-							<a href="#popupImageCreated" data-rel="popup" data-position-to="window"
-								data-transition="flip"><img class="popImage" src=""
-								style="width: 30%;" id="smallImgCreated" /></a>
-							<div data-role="popup" id="popupImageCreated" data-overlay-theme="a"
-								data-theme="d" data-corners="false">
+							<a href="#popupImageCreated" data-rel="popup"
+								data-position-to="window" data-transition="flip"><img
+								class="popImage" src="" style="width: 30%;" id="smallImgCreated" /></a>
+							<div data-role="popup" id="popupImageCreated"
+								data-overlay-theme="a" data-theme="d" data-corners="false">
 								<a href="#" data-rel="back" data-role="button" data-theme="a"
 									data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a><img
 									class="popImage" id="largeImgCreated" src=""

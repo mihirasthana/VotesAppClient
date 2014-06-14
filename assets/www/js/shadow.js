@@ -180,7 +180,7 @@ $( document ).ready(function() {
 					}
 					else
 					{
-						html2='<a id="search-button" href="#iShadowVotePage" data-icon="search" data-theme="d">VotedList</a>';
+						html2='<a id="search-button" href="#iShadowVotedPage" data-icon="search" data-theme="d">VotedList</a>';
 					}
 					html+=html2+'</li></ul></div></div></div>';
 					html1='';
@@ -269,7 +269,7 @@ $( document ).ready(function() {
 			async:false,
 			success: function(msg){
 				var obj = jQuery.parseJSON( ''+ msg +'' );
-				alert(msg);
+				//alert(msg);
 				var html='';
 				var html1='';
 				var html2='';
@@ -309,7 +309,7 @@ $( document ).ready(function() {
 						}
 						else
 						{
-							html2='<a id="" class="voteEnt" href="#iShadowVotePage" data-icon="search" data-theme="f">Vote</a>';
+							html2='<a id="" class="voteEnt" href="#iShadowVotePage" data-icon="search" data-theme="d">Vote</a>';
 						}
 						html+=html2+'</li></ul></div></div></div>';
 						html1='';
@@ -378,7 +378,7 @@ $( document ).ready(function() {
 			url: url,
 			data: msg,
 			success: function(res){
-				alert("Voting "+res+"!!");
+				alert("Voted Successfully!!");
 			},
 			error: function () {
 				alert("Error");

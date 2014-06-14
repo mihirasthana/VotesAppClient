@@ -291,6 +291,7 @@ $('.submitPoll').click(function()
 				{
 					sendMediaToS3(1,($('#smallImage').attr("src")),obj.PollId);
 				}
+				alert("Poll Submitted Successfully!!");
 				location.href="#home-page";
 			},
 			error: function () {
@@ -494,15 +495,20 @@ function showMyPolls(phonenum)
 			var obj = jQuery.parseJSON( ''+ msg +'' );
 			var tempArr = new Array();
 			var html1= '';
+			var color='c';
 			if(!(isEmpty(obj)))
 			{
 				for(var i=0;i<obj.My_Polls.length;i++) {
+					if(i%2==0)
+						color='';
+					else
+						color='c';
 					var html = getContactNames(obj.My_Polls[0].poll_creator);
 					if(html == "") {
 						html = obj.My_Polls[0].poll_creator;
 					}
 					//alert(html);
-					html1 += '<li class="polldetailssclass"><a id= "' + obj.My_Polls[i].poll_id+'" href="#showPollDetails">'+obj.My_Polls[i].poll_question+'</a><p>Created by: ' + html + '</p></li>';
+					html1 += '<li class="polldetailssclass" data-theme="'+color+'"><a id= "' + obj.My_Polls[i].poll_id+'" href="#showPollDetails">'+obj.My_Polls[i].poll_question+'</a><p>Created by: ' + html + '</p></li>';
 				}
 			}
 			//'<input type="radio" name="choice" id="choice" value="'+My_Polls[i].poll_options[j]+'"><label for="choice">'+obj.My_Polls[i].poll_options[j]+'</label>'
@@ -559,7 +565,7 @@ function tapHandler( event ){
 				{
 					html='<br /> <br /> <br />';
 					$("#spacesBeforeImgPrivate").html(html);
-					alert("Image Alert"+obj.This_Poll[0].poll_media_link);
+					//alert("Image Alert"+obj.This_Poll[0].poll_media_link);
 					$('#smallPImg').attr("src",obj.This_Poll[0].poll_media_link);
 					$('#largePImg').attr("src",obj.This_Poll[0].poll_media_link);
 					$("#spacesAfterImgPrivate").html(html);
@@ -615,10 +621,15 @@ function showAllPolls(phonenum)
 			var obj = jQuery.parseJSON( ''+ msg +'' );
 			var tempArr = new Array();
 			var html1= '';
+			var color='c';
 			if(!(isEmpty(obj)))
 			{
 				for(var i=0;i<obj.All_Polls.length;i++) {
-					html1 += '<li class="publicpolldetailssclass"><a id= "' + obj.All_Polls[i]._id.$oid+'" href="#showPublicPollDetailsPage">'+obj.All_Polls[i].poll_question+'</a></li>';
+					if(i%2==0)
+						color='';
+					else
+						color='c';
+					html1 += '<li class="publicpolldetailssclass" data-theme='+color+'><a id= "' + obj.All_Polls[i]._id.$oid+'" href="#showPublicPollDetailsPage">'+obj.All_Polls[i].poll_question+'</a></li>';
 				}
 			}
 
@@ -682,7 +693,7 @@ function tapPublicPollDetails( event ){
 				{
 					html='<br /> <br /> <br />';
 					$("#spacesBeforeImg").html(html);
-					alert("Image Alert"+obj.This_Poll[0].poll_media_link);
+					//alert("Image Alert"+obj.This_Poll[0].poll_media_link);
 					$('#smallImg').attr("src",obj.This_Poll[0].poll_media_link);
 					$('#largeImg').attr("src",obj.This_Poll[0].poll_media_link);
 					$("#spacesAfterImg").html(html);
@@ -808,10 +819,15 @@ function showMyCreatedPolls(phonenum)
 			var obj = jQuery.parseJSON( ''+ msg +'' );
 			var tempArr = new Array();
 			var html1= '';
+			var color='c';
 			if(!(isEmpty(obj)))
 			{
 				for(var i=0;i<obj.My_Polls.length;i++) {
-					html1 += '<li class="createdpolldetailssclass" ><a id= "' + obj.My_Polls[i].poll_id+'" href="#showCreatedPollDetails">'+obj.My_Polls[i].poll_question+'</a></li>';
+					if(i%2==0)
+						color='';
+					else
+						color='c';
+					html1 += '<li class="createdpolldetailssclass" data-theme="'+color+'" ><a id= "' + obj.My_Polls[i].poll_id+'" href="#showCreatedPollDetails">'+obj.My_Polls[i].poll_question+'</a></li>';
 				}
 			}
 			else
@@ -903,7 +919,7 @@ function tapCreatedPollDetails( event ){
 				{
 					html='<br /> <br /> <br />';
 					$("#spacesBeforeImgCreated").html(html);
-					alert("Image Alert"+obj.This_Poll[0].poll_media_link);
+					//alert("Image Alert"+obj.This_Poll[0].poll_media_link);
 					$('#smallImgCreated').attr("src",obj.This_Poll[0].poll_media_link);
 					$('#largeImgCreated').attr("src",obj.This_Poll[0].poll_media_link);
 					$("#spacesAfterImgCreated").html(html);
@@ -1039,7 +1055,7 @@ function getPhoto(source) {
 }
 
 function onFail(message) {
-	alert('Failed because: ' + message);
+	alert("You Haven't selected any image");
 }
 
 $('#CapturePhoto').click(function()

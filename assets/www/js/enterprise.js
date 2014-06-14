@@ -93,6 +93,7 @@ $('#shadow').click(function(){
 		success: function(msg){
 			//alert(msg);
 			//alert("Follow Success");
+			alert("You are now shadowing "+($("#getEntName").val())+"!!");
 			$('.category').trigger('click');
 			location.href="#shadowListingPage";
 			

@@ -30,7 +30,7 @@ $(document).ready(function(){
 		
 		//alert("hi");
 		
-		alert("chart displayed");
+		//alert("chart displayed");
 
 		var pollID = $("#pollIdForCharts").val();
 		//alert(pollID);
@@ -223,8 +223,8 @@ $(document).ready(function(){
 	
 	$("#pieChart").click(function() {
 		
-		alert("pie");
-		alert("chart displayed");
+		//alert("pie");
+		//alert("chart displayed");
 
 		var pollID = $("#pollIdForCharts").val();
 		//alert(pollID);
@@ -298,7 +298,7 @@ $(document).ready(function(){
 	});
 	
 	$("#bubbleChart").click(function() {
-		alert("bubble");
+		//alert("bubble");
 		
 		var pollID = $("#pollIdForCharts").val();
 		//alert(pollID);
